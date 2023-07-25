@@ -47,7 +47,7 @@ dependencies {
     compileOnly("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     compileOnly("net.william278:huskhomes:4.4.5")
     implementation("net.william278:annotaml:2.0.5")
-    implementation("org.bstats:bstats-bukkit:3.0.0")
+    implementation("org.bstats:bstats-bukkit:3.0.2")
     implementation("cloud.commandframework:cloud-paper:1.8.3")
     implementation("cloud.commandframework:cloud-annotations:1.8.3")
     implementation("de.themoep:inventorygui:1.6.1-SNAPSHOT")
