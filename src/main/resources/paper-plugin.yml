@@ -1,0 +1,20 @@
+name: ${plugin_name}
+version: '${version}'
+main: io.lwcl.BetterHomesGUI
+api-version: '1.13'
+
+prefix: BetterHomesGUI
+authors: [LcyDev]
+website: https://github.com/LcyDev
+
+load: POSTWORLD
+dependencies: {}
+load-before: {}
+load-after:
+  - name: HuskHomes
+    required: true
+    bootstrap: false
+
+description: '${description}'
+
+permissions: {}

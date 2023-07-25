@@ -1,0 +1,36 @@
+# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+# ┃    BetterHomesGUI Config    ┃
+# ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+# ┣━ Developed by LcyDev
+# ┗╸ https://github.com/LcyDev/BetterHomes-GUI
+
+plugin:
+  prefix: "<dark_gray>[<yellow>BetterHomes<dark_gray>]"
+  language: en_us
+  pages: true
+
+menu:
+  filler: minecraft:white_stained_glass_pane
+  home:
+    unset: minecraft:gray_bed
+    claimed: minecraft:white_bed
+    locked: minecraft:red_bed
+
+  control:
+    unset: minecraft:gray_dye
+    claimed: minecraft:lime_dye
+    locked: minecraft:red_dye
+
+  other:
+    confirm: minecraft:lime_concrete
+    cancel: minecraft:red_concrete
+    back: minecraft:barrier
+
+  paginate:
+    first_page: minecraft:spectral_arrow
+    last_page: minecraft:spectral_arrow
+    next_page: minecraft:arrow
+    previous_page: minecraft:arrow
+
+# Please don't remove this version settings
+version: 1.0.0

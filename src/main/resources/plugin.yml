@@ -1,0 +1,30 @@
+name: ${plugin_name}
+version: '${version}'
+main: io.lwcl.BetterHomesGUI
+api-version: 1.13
+
+prefix: BetterHomesGUI
+author: LcyDev
+website: https://github.com/LcyDev
+
+load: POSTWORLD
+depend:
+  - HuskHomes
+softdepend: [PlaceholderAPI]
+libraries:
+  - org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0
+  - com.squareup.okhttp3:okhttp:4.10.0
+
+description: '${description}'
+
+permissions:
+  betterhomes.gui.player:
+    description: Gives access to all player commands
+    children:
+      betterhomes.gui.help: true
+      betterhomes.gui.open: true
+
+  betterhomes.gui.admin:
+    description: Gives access to all admin commands
+    children:
+      betterhomes.gui.open.others: true
