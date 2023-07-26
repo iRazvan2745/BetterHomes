@@ -2,7 +2,6 @@ package io.lwcl.commands
 
 import cloud.commandframework.annotations.*
 import io.lwcl.BetterHomesGUI
-import io.lwcl.api.objects.ModernText
 import io.lwcl.menu.ListMenu
 import net.william278.huskhomes.api.HuskHomesAPI
 import org.bukkit.OfflinePlayer
@@ -20,10 +19,10 @@ class BetterHomesCMD(private val plugin: BetterHomesGUI) {
     @CommandPermission("betterhomes.gui.reload")
     fun onReload(commandSender: CommandSender) {
         plugin.reloadConfig()
-        commandSender.sendMessage(ModernText.miniModernText(plugin.translation.getKey("messages.config_reload")))
+        commandSender.sendMessage(plugin.locale.getLocale("messages.other.config_reload").toComponent())
         plugin.logger.info("Config.yml was reloaded !")
         plugin.saveConfig()
-        plugin.translation.reloadTranslation()
+        plugin.locale.reloadTranslation()
     }
 
     @CommandMethod("bhgui open")
@@ -37,7 +36,7 @@ class BetterHomesCMD(private val plugin: BetterHomesGUI) {
                 menu.show(onlineSender)
             }
         } else {
-            commandSender.sendMessage(ModernText.miniModernText("<red>Only a player can use this command.</red>"))
+            commandSender.sendMessage(plugin.locale.getLocale("messages.other.not_player").toComponent())
         }
     }
 
@@ -56,7 +55,7 @@ class BetterHomesCMD(private val plugin: BetterHomesGUI) {
                 menu.show(onlineSender)
             }
         } else {
-            commandSender.sendMessage(ModernText.miniModernText("<red>Only a player can use this command.</red>"))
+            commandSender.sendMessage(plugin.locale.getLocale("messages.other.not_player").toComponent())
         }
     }
 }

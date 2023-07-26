@@ -9,8 +9,8 @@ import cloud.commandframework.meta.CommandMeta
 import cloud.commandframework.paper.PaperCommandManager
 import io.lwcl.api.HookManager
 import io.lwcl.commands.BetterHomesCMD
+import io.lwcl.config.Locale
 import io.lwcl.config.Settings
-import io.lwcl.config.Translation
 import io.lwcl.listeners.CreateListener
 import io.lwcl.listeners.DeleteListener
 import io.lwcl.listeners.ViewListener
@@ -25,7 +25,7 @@ import java.util.function.Function
 class BetterHomesGUI : JavaPlugin() {
     private lateinit var metrics: Metrics
     val pluginManager: PluginManager = server.pluginManager
-    val translation: Translation by lazy { Translation(this) }
+    val locale: Locale by lazy { Locale(this) }
     val settings: Settings by lazy { Settings(this) }
     private val hookManager: HookManager by lazy { HookManager(this) }
     var huskHomesAPI: HuskHomesAPI? = null
@@ -36,7 +36,7 @@ class BetterHomesGUI : JavaPlugin() {
 
     override fun onLoad() {
         settings.createConfig("config.yml", "1.0.0")
-        translation.loadTranslation()
+        locale.loadTranslation()
     }
 
     override fun onEnable() {
