@@ -6,30 +6,54 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags
 
+data class ModernComponent(val value: Component) {
+    fun toSerialized(): String {
+        return ModernText.serializeComponent(value)
+    }
+
+    fun toComponent(): Component {
+        return value
+    }
+}
+
 object ModernText {
 
     @JvmStatic
     val miniMessage: MiniMessage by lazy { initMiniMessage() }
 
-    fun buildResolver(message: String, replacements: Map<String, String>): Component {
+    fun resolver(message: String, replacements: Map<String, String>): ModernComponent {
         val resolvers = replacements.entries.map {(key, value) -> Placeholder.parsed(key, value)}
         return miniModernText(
-            message,
+            convertVariables(message),
             TagResolver.builder().apply {
                 resolvers.forEach { value -> resolver(value) }
             }.build()
         )
     }
 
-    @JvmStatic
-    fun miniModernText(message: String): Component {
-        return miniMessage.deserialize(message)
+    fun serializeComponent(component: Component): String {
+        return miniMessage.serialize(component)
     }
 
     @JvmStatic
-    fun miniModernText(message: String, resolver: TagResolver): Component {
-        return miniMessage.deserialize(message, resolver)
+    fun miniModernText(message: String): ModernComponent {
+        val component = miniMessage.deserialize(convertVariables(message))
+        return ModernComponent(component)
     }
+
+    @JvmStatic
+    fun miniModernText(message: String, resolver: TagResolver): ModernComponent {
+        val component = miniMessage.deserialize(convertVariables(message), resolver)
+        return ModernComponent(component)
+    }
+
+    private fun convertVariables(value: String): String {
+        val regex = """[%{](\w+)[%}]""".toRegex()
+        return regex.replace(value) { matchResult ->
+            "<${matchResult.groupValues[1]}>"
+        }
+    }
+
 
     private fun initMiniMessage(): MiniMessage {
         return MiniMessage.builder()
