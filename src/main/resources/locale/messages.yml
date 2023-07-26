@@ -1,25 +1,39 @@
+# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+# ┃    BetterHomesGUI Messages    ┃
+# ┃      Developed by LcyDev      ┃
+# ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+# ┣╸ https://github.com/LcyDev/BetterHomes-GUI
+# ┃
+# ┗━ Formatted in MiniMessage: https://docs.advntr.dev/minimessage/format.html
+
 messages:
   other:
     config_reload: "<green>Config was successfully reloaded !</green>"
+    translation_missing: "<red>Translation <key> missing.... contact developer of this plugin</red>"
     error: "<red>You can't do that !</red>"
+    not_player: "<red>Only a player can use this command.</red>"
+
   teleport:
     error: "<red>Could not teleport to <name> home</red>"
     success: "<green>Home <name> has been set for <user></green>"
+
   create_home:
     error: "<red>Could not create home <name></red>"
     success: "<green>Home <name> has been set <user></green>"
+
   remove_home:
     error: "<red>Could not remove home <name></red>"
     success: "<green>Home <name> has been removed for <user></green>"
 
 homes:
-  title: "<user>'s Homes"
+  title: "<owner>'s Homes"
+  owner: "<aqua>Created by <owner></aqua>"
   items:
     unset:
       name: "<lime><bold>NO HOME SET</bold></lime>"
       details: "Click to create home."
     claimed:
-      name: "<lime><bold>HOME <number></bold></lime>"
+      name: "<lime><bold>HOME <number>: <suffix> </bold></lime>"
       details: "Click to teleport to this home"
     locked:
       name: "<red><bold>HOME LIMIT REACHED</bold></red>"

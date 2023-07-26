@@ -50,9 +50,9 @@ abstract class Menu(
         api.setHomeMetaTags(position, tags)
     }
 
-    protected fun getPosSuffix(position: Home): String? {
-        val tags = position.meta.tags
-        return tags[SUFFIX_TAG_KEY]
+    protected fun getPosSuffix(position: Home?): String {
+        val tags = position?.meta?.tags ?: return ""
+        return tags[SUFFIX_TAG_KEY] ?: ""
     }
 
     protected fun setPosSuffix(position: Home, suffix: String) {

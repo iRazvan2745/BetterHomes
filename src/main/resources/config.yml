@@ -1,8 +1,10 @@
 # ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 # ┃    BetterHomesGUI Config    ┃
+# ┃     Developed by LcyDev     ┃
 # ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-# ┣━ Developed by LcyDev
-# ┗╸ https://github.com/LcyDev/BetterHomes-GUI
+# ┣╸ https://github.com/LcyDev/BetterHomes-GUI
+# ┃
+# ┗━ Formatted in MiniMessage: https://docs.advntr.dev/minimessage/format.html
 
 plugin:
   prefix: "<dark_gray>[<yellow>BetterHomes<dark_gray>]"

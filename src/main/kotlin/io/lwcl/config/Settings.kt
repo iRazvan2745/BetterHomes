@@ -12,9 +12,11 @@ import java.io.File
 @YamlFile(header = """
     ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
     ┃    BetterHomesGUI Config    ┃
+    ┃     Developed by LcyDev     ┃
     ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-    ┣━ Developed by LcyDev
-    ┗╸ https://github.com/LcyDev/BetterHomes-GUI
+    ┣╸ https://github.com/LcyDev/BetterHomes-GUI
+    ┃
+    ┗━ Formatted in MiniMessage: https://docs.advntr.dev/minimessage/format.html
     """)
 
 class Settings(private val plugin: BetterHomesGUI) {
