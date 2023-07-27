@@ -1,0 +1,60 @@
+# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+# ┃    BetterHomesGUI Messages    ┃
+# ┃      Developed by LcyDev      ┃
+# ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+# ┣╸ https://github.com/LcyDev/BetterHomes-GUI
+# ┃
+# ┗━ Formatted in MiniMessage: https://docs.advntr.dev/minimessage/format.html
+
+messages:
+  other:
+    config_reload: "<prefix> <green>Config was successfully reloaded !</green>"
+    translation_missing: "<prefix> <red>Translation <key> missing.... contact developer of this plugin</red>"
+    error: "<prefix> <red>You can't do that !</red>"
+    not_player: "<prefix> <red>Only a player can use this command.</red>"
+
+  teleport:
+    error: "<prefix> <red>Could not teleport to <name> home from <owner></red>"
+    success: "<prefix> <dark_green>Teleporting to Home <name> from <owner></dark_green>"
+
+  create_home:
+    error: "<prefix> <red>Could not create home <name> for <owner></red>"
+    success: "<prefix> <dark_green>Home <name> has been set for <owner></dark_green>"
+
+  delete_home:
+    error: "<prefix> <red>Could not delete home <name> from <owner></red>"
+    success: "<prefix> <dark_green>Home <name> has been deleted for <owner></dark_green>"
+
+menu:
+  homes:
+    title: "<owner>'s Homes"
+    owner: "<aqua>Created by <owner></aqua>"
+    items:
+      unset:
+        name: "<gray><bold>NO HOME SET</bold></gray>"
+        details: "Click to create home."
+      claimed:
+        name: "<green><bold>HOME <number>: <suffix> </bold></green>"
+        details: "Click to teleport to this home"
+      locked:
+        name: "<dark_red><bold>HOME LIMIT REACHED</bold></dark_red>"
+        details: "You need a higher rank for more homes"
+
+  prompt:
+    title: "Confirm <action> <object>"
+    items:
+      confirm:
+        name: "<green><bold>CONFIRM</bold></green>"
+        details: "Click to proceed"
+      cancel:
+        name: "<dark_red><bold>CANCEL</bold></dark_red>"
+        details: "Click to cancel"
+      back:
+        name: "<dark_red><bold>BACK</bold></dark_red>"
+        details: "Click to return"
+
+  pagination:
+    first_page: "⏪ View first page (1)"
+    previous_page: "◀ View previous page (<prevpage>)"
+    next_page: "View next page (<nextpage>) ▶"
+    last_page: "View last page (<pages>) ⏩"

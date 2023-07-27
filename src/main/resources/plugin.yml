@@ -28,3 +28,7 @@ permissions:
     description: Gives access to all admin commands
     children:
       betterhomes.gui.open.others: true
+      betterhomes.gui.tp.others: true
+      betterhomes.gui.edit.others: true
+      betterhomes.gui.create.others: true
+      betterhomes.gui.delete.others: true

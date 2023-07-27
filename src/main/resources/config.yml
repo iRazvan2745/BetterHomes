@@ -7,7 +7,7 @@
 # ┗━ Formatted in MiniMessage: https://docs.advntr.dev/minimessage/format.html
 
 plugin:
-  prefix: "<dark_gray>[<yellow>BetterHomes<dark_gray>]"
+  prefix: "<dark_gray>[<aqua>BetterHomes</aqua>]</dark_gray>"
   language: en_us
   pages: true
 
@@ -23,7 +23,7 @@ menu:
     claimed: minecraft:lime_dye
     locked: minecraft:red_dye
 
-  other:
+  prompt:
     confirm: minecraft:lime_concrete
     cancel: minecraft:red_concrete
     back: minecraft:barrier
