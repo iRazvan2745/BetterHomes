@@ -100,9 +100,4 @@ class Settings {
     fun getMaterial(id: String): Material {
         return Material.matchMaterial(id.replace("minecraft:", "")) ?: Material.STONE
     }
-
-    fun checkVersion(versionTo: String) {
-        if (version == versionTo) return true
-        val file = File()
-    }
 }
