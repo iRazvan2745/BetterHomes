@@ -1,9 +1,9 @@
 name: ${plugin_name}
 version: '${version}'
-main: io.lwcl.BetterHomesGUI
+main: io.lwcl.BetterHomes
 api-version: '1.13'
 
-prefix: BetterHomesGUI
+prefix: BetterHomes
 authors: [LcyDev]
 website: https://github.com/LcyDev
 

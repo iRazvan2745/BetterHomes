@@ -1,10 +1,10 @@
 package io.lwcl.api
 
-import io.lwcl.BetterHomesGUI
+import io.lwcl.BetterHomes
 import net.william278.huskhomes.api.HuskHomesAPI
 import org.bukkit.plugin.ServicePriority
 
-class HookManager(private val plugin: BetterHomesGUI) {
+class HookManager(private val plugin: BetterHomes) {
 
     /**
      * Method for check if plugin is installed

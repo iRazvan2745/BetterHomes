@@ -7,18 +7,20 @@ import io.lwcl.config.Settings
 import io.lwcl.listeners.CreateListener
 import io.lwcl.listeners.DeleteListener
 import io.lwcl.listeners.ViewListener
+import net.william278.annotaml.Annotaml
 import net.william278.huskhomes.api.HuskHomesAPI
 import org.bstats.bukkit.Metrics
 import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
-class BetterHomesGUI : JavaPlugin() {
+class BetterHomes : JavaPlugin() {
     val pluginManager: PluginManager = server.pluginManager
     private val hookManager: HookManager by lazy { HookManager(this) }
     private val manager: Manager by lazy { Manager(this) }
 
     val locale: Locales by lazy { Locales(this) }
+    private lateinit var configYML: Annotaml<Settings>
     lateinit var settings: Settings
 
     var huskHomesAPI: HuskHomesAPI? = null
@@ -30,6 +32,7 @@ class BetterHomesGUI : JavaPlugin() {
     }
 
     override fun onLoad() {
+        settings = Settings()
         reloadConfigYAML()
         locale.setLanguageFile(settings.language)
     }
@@ -76,10 +79,15 @@ class BetterHomesGUI : JavaPlugin() {
         logger.info("Listeners registered(${listeners.size}) in time ${System.currentTimeMillis() - start} ms -> ok")
     }
 
+    fun saveConfigYAML() {
+        val file = File(dataFolder, "config.yml")
+        configYML.save(file)
+    }
+
     fun reloadConfigYAML() {
-        val configYML = manager.loadSettings()
-        val settings = configYML.get()
-        if (settings.version != "1.0.0") {
+        configYML = manager.loadSettings()
+        settings = configYML.get()
+        if (settings.version == "1.0.0") {
             logger.info("Configuration config.yml is the latest [!]")
         } else {
             val file = File(dataFolder, "config.yml")

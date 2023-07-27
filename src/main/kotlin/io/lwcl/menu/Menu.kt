@@ -1,7 +1,7 @@
 package io.lwcl.menu
 
 import de.themoep.inventorygui.InventoryGui
-import io.lwcl.BetterHomesGUI
+import io.lwcl.BetterHomes
 import net.william278.huskhomes.api.HuskHomesAPI
 import net.william278.huskhomes.position.Home
 import net.william278.huskhomes.user.OnlineUser
@@ -9,7 +9,7 @@ import org.bukkit.Material
 import java.util.function.Consumer
 
 abstract class Menu(
-    protected val plugin: BetterHomesGUI,
+    protected val plugin: BetterHomes,
     protected val title: String,
     protected val layout: Array<String>
 ) {

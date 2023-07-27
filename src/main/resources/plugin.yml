@@ -1,9 +1,9 @@
 name: ${plugin_name}
 version: '${version}'
-main: io.lwcl.BetterHomesGUI
+main: io.lwcl.BetterHomes
 api-version: 1.13
 
-prefix: BetterHomesGUI
+prefix: BetterHomes
 author: LcyDev
 website: https://github.com/LcyDev
 
@@ -18,17 +18,17 @@ libraries:
 description: '${description}'
 
 permissions:
-  betterhomes.gui.player:
+  betterhomes.player:
     description: Gives access to all player commands
     children:
-      betterhomes.gui.help: true
-      betterhomes.gui.open: true
+      betterhomes.help: true
+      betterhomes.open: true
 
-  betterhomes.gui.admin:
+  betterhomes.admin:
     description: Gives access to all admin commands
     children:
-      betterhomes.gui.open.others: true
-      betterhomes.gui.tp.others: true
-      betterhomes.gui.edit.others: true
-      betterhomes.gui.create.others: true
-      betterhomes.gui.delete.others: true
+      betterhomes.open.others: true
+      betterhomes.tp.others: true
+      betterhomes.edit.others: true
+      betterhomes.create.others: true
+      betterhomes.delete.others: true

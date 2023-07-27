@@ -6,4 +6,4 @@ pluginManagement {
         }
     }
 }
-rootProject.name = "betterhomes-gui"
+rootProject.name = "betterhomes"

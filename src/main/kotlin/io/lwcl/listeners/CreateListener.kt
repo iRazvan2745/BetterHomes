@@ -1,15 +1,16 @@
 package io.lwcl.listeners
 
-import io.lwcl.BetterHomesGUI
+import io.lwcl.BetterHomes
 import net.william278.huskhomes.api.HuskHomesAPI
 import net.william278.huskhomes.event.HomeCreateEvent
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
-class CreateListener(private val plugin: BetterHomesGUI) : Listener {
+class CreateListener(private val plugin: BetterHomes) : Listener {
 
     private val api: HuskHomesAPI = HuskHomesAPI.getInstance()
 
+    //TODO: IMPLEMENT
     @EventHandler
     fun onHomeCreate(event: HomeCreateEvent) {
         return

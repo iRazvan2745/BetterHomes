@@ -1,2 +1,2 @@
-# BetterHomes-GUI
-BetterHomesGUI is a lightweight plugin using HuskHomes API
+# BetterHomes
+BetterHomes is a lightweight GUI plugin using HuskHomes API

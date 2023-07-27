@@ -15,7 +15,7 @@ import java.io.File
 import java.io.IOException
 import java.lang.reflect.InvocationTargetException
 
-class Manager(private val plugin: BetterHomesGUI) {
+class Manager(private val plugin: BetterHomes) {
 
     internal fun loadSettings(): Annotaml<Settings> {
         val configFile = File(plugin.dataFolder, "config.yml")
