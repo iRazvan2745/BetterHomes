@@ -4,7 +4,6 @@ import cloud.commandframework.annotations.*
 import io.lwcl.BetterHomesGUI
 import io.lwcl.menu.ListMenu
 import net.william278.huskhomes.api.HuskHomesAPI
-import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -18,13 +17,12 @@ class BetterHomesCMD(private val plugin: BetterHomesGUI) {
     @CommandMethod("bhgui reload")
     @CommandPermission("betterhomes.gui.reload")
     fun onReload(commandSender: CommandSender) {
-        plugin.reloadConfig()
+        plugin.reloadConfigYAML()
         commandSender.sendMessage(plugin.locale.getLocale("messages.other.config_reload").toComponent())
         plugin.logger.info("Config.yml was reloaded !")
-        plugin.saveConfig()
-        plugin.locale.reloadTranslation()
     }
 
+    //TODO: FIX
     @CommandMethod("bhgui open")
     @CommandPermission("betterhomes.gui.open")
     fun onOpen(commandSender: CommandSender) {
@@ -40,15 +38,16 @@ class BetterHomesCMD(private val plugin: BetterHomesGUI) {
         }
     }
 
+    //TODO: FIX
     @CommandMethod("bhgui open <player>")
     @CommandPermission("betterhomes.gui.open.others")
     fun onOpenOthers(
         commandSender: CommandSender,
-        @Argument(value = "player", suggestions = "players") offlinePlayer: OfflinePlayer,
+        @Argument(value = "player", suggestions = "players") player: Player,
     ) {
         if (commandSender is Player) {
             val onlineSender = api.adaptUser(commandSender)
-            val onlineOwner = api.adaptUser(offlinePlayer.player)
+            val onlineOwner = api.adaptUser(player)
 
             api.getUserHomes(onlineOwner).thenApply {
                 val menu = ListMenu.homes(plugin, it, onlineOwner)
