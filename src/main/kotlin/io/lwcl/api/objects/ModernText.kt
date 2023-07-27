@@ -5,9 +5,11 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+
 
 data class ModernComponent(val value: Component) {
-    fun toSerialized(): String {
+    fun toLegacy(): String {
         return ModernText.serializeComponent(value)
     }
 
@@ -17,9 +19,9 @@ data class ModernComponent(val value: Component) {
 }
 
 object ModernText {
-
     @JvmStatic
     val miniMessage: MiniMessage by lazy { initMiniMessage() }
+    private val legacySerializer: LegacyComponentSerializer by lazy { initLegacyMessage() }
 
     fun resolver(message: String, replacements: Map<String, String>): ModernComponent {
         val resolvers = replacements.entries.map {(key, value) -> Placeholder.parsed(key, value)}
@@ -32,7 +34,7 @@ object ModernText {
     }
 
     fun serializeComponent(component: Component): String {
-        return miniMessage.serialize(component)
+        return legacySerializer.serialize(component)
     }
 
     @JvmStatic
@@ -54,6 +56,9 @@ object ModernText {
         }
     }
 
+    private fun initLegacyMessage(): LegacyComponentSerializer {
+        return LegacyComponentSerializer.builder().build()
+    }
 
     private fun initMiniMessage(): MiniMessage {
         return MiniMessage.builder()
