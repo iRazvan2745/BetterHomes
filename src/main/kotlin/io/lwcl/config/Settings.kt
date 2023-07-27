@@ -1,13 +1,12 @@
 package io.lwcl.config
 
-import io.lwcl.BetterHomesGUI
 import io.lwcl.api.enums.ButtonType
 import io.lwcl.api.enums.PosType
+import net.william278.annotaml.YamlComment
 import net.william278.annotaml.YamlFile
 import net.william278.annotaml.YamlKey
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
-import java.io.File
 
 @YamlFile(header = """
     ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -19,13 +18,13 @@ import java.io.File
     ┗━ Formatted in MiniMessage: https://docs.advntr.dev/minimessage/format.html
     """)
 
-class Settings(private val plugin: BetterHomesGUI) {
+class Settings {
     @YamlKey("plugin.prefix")
-    var prefix: String = "[BetterHomes]"
+    var prefix: String = "<dark_gray>[<aqua>BetterHomes</aqua>]</dark_gray>"
     @YamlKey("plugin.language")
     var language: String = "en_us"
     @YamlKey("plugin.pages")
-    var pages: Boolean = true
+    var pagesEnabled: Boolean = true
 
     @YamlKey("menu.filler")
     var menuFillerItem: String = "minecraft:white_stained_glass_pane"
@@ -37,17 +36,17 @@ class Settings(private val plugin: BetterHomesGUI) {
     var lockedHomeItem: String = "minecraft:red_bed"
 
     @YamlKey("menu.control.unset")
-    var unsetControlItem: String = "minecraft:gray_bed"
+    var unsetControlItem: String = "minecraft:gray_dye"
     @YamlKey("menu.control.claimed")
-    var claimedControlItem: String = "minecraft:white_bed"
+    var claimedControlItem: String = "minecraft:green_dye"
     @YamlKey("menu.control.locked")
-    var lockedControlItem: String = "minecraft:red_bed"
+    var lockedControlItem: String = "minecraft:red_dye"
 
-    @YamlKey("menu.other.confirm")
+    @YamlKey("menu.prompt.confirm")
     var confirmItem: String = "minecraft:lime_concrete"
-    @YamlKey("menu.other.cancel")
+    @YamlKey("menu.prompt.cancel")
     var cancelItem: String = "minecraft:red_concrete"
-    @YamlKey("menu.other.back")
+    @YamlKey("menu.prompt.back")
     var backItem: String = "minecraft:barrier"
 
     @YamlKey("menu.paginate.first_page")
@@ -58,6 +57,10 @@ class Settings(private val plugin: BetterHomesGUI) {
     var nextPageItem: String = "minecraft:arrow"
     @YamlKey("menu.paginate.previous_page")
     var prevPageItem: String = "minecraft:arrow"
+
+    @YamlComment("Please don't remove this version settings")
+    @YamlKey("version")
+    val version: String = "1.0.0"
 
     fun getHomeIcon(posType: PosType): ItemStack {
         return when (posType) {
@@ -75,7 +78,7 @@ class Settings(private val plugin: BetterHomesGUI) {
         }
     }
 
-    fun getPaginatorIcon(buttonType: ButtonType): ItemStack {
+    fun getPaginateIcon(buttonType: ButtonType): ItemStack {
         return when (buttonType) {
             ButtonType.FIRST -> ItemStack(getMaterial(firstPageItem))
             ButtonType.PREVIOUS -> ItemStack(getMaterial(prevPageItem))
@@ -98,38 +101,8 @@ class Settings(private val plugin: BetterHomesGUI) {
         return Material.matchMaterial(id.replace("minecraft:", "")) ?: Material.STONE
     }
 
-    fun getValue(key: String, default: Any): Any {
-        return plugin.config[key] ?: default
-    }
-
-    fun create(fileName: String) : Settings {
-        val file = File(plugin.dataFolder, fileName)
-        if (!file.exists()) {
-            plugin.saveResource(fileName, false)
-        } else {
-            plugin.logger.info("Configuration $fileName exist !")
-        }
-        return this
-    }
-
-    fun createConfig(configName: String, version: String): Settings {
-        val file = File(plugin.dataFolder, configName)
-        if (!file.exists()) {
-            plugin.saveResource(configName, false)
-            plugin.logger.info("Configuration $configName was successfully created !")
-        } else {
-            val currentVersion = plugin.config.getString("version")
-
-            if (currentVersion.isNullOrEmpty() || currentVersion != version) {
-                file.copyTo(File(plugin.dataFolder, "old_config.yml"), true)
-                plugin.saveResource(configName, true)
-                plugin.config["version"] = version
-                plugin.saveConfig()
-                plugin.logger.info("Configuration $configName is updated !")
-            } else {
-                plugin.logger.info("Configuration $configName is latest !")
-            }
-        }
-        return this
+    fun checkVersion(versionTo: String) {
+        if (version == versionTo) return true
+        val file = File()
     }
 }
