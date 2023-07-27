@@ -13,8 +13,8 @@ abstract class Menu(
     protected val title: String,
     protected val layout: Array<String>
 ) {
-    protected val api: HuskHomesAPI = HuskHomesAPI.getInstance()
-    protected val gui: InventoryGui = InventoryGui(plugin, title, layout)
+    internal val api: HuskHomesAPI = HuskHomesAPI.getInstance()
+    private val gui: InventoryGui = InventoryGui(plugin, title, layout)
 
     protected abstract fun buildMenu(): Consumer<InventoryGui>
 
@@ -39,26 +39,26 @@ abstract class Menu(
         gui.destroy()
     }
 
-    protected fun getPosMaterial(position: Home): Material? {
-        val tags = position.meta.tags
-        return tags[ICON_TAG_KEY]?.let { Material.matchMaterial(it) }
+    protected fun getPosMaterial(position: Home?): Material? {
+        return position?.meta?.tags?.get(ICON_TAG_KEY)?.let {
+            Material.matchMaterial(it)
+        }
     }
 
     protected fun setPosMaterial(position: Home, material: Material) {
-        val tags = position.meta.tags
-        tags[ICON_TAG_KEY] = material.key.toString()
-        api.setHomeMetaTags(position, tags)
+        api.editHomeMetaTags(position.owner, position.name) { tags ->
+            tags[ICON_TAG_KEY] = material.key.toString()
+        }
     }
 
     protected fun getPosSuffix(position: Home?): String {
-        val tags = position?.meta?.tags ?: return ""
-        return tags[SUFFIX_TAG_KEY] ?: ""
+        return position?.meta?.tags?.get(SUFFIX_TAG_KEY) ?: ""
     }
 
     protected fun setPosSuffix(position: Home, suffix: String) {
-        val tags = position.meta.tags
-        tags[SUFFIX_TAG_KEY] = suffix
-        api.setHomeMetaTags(position, tags)
+        api.editHomeMetaTags(position.owner, position.name) { tags ->
+            tags[SUFFIX_TAG_KEY] = suffix
+        }
     }
 
     companion object {
