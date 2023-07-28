@@ -26,7 +26,6 @@ menu:
   prompt:
     confirm: minecraft:lime_concrete
     cancel: minecraft:red_concrete
-    back: minecraft:barrier
 
   paginate:
     first_page: minecraft:spectral_arrow

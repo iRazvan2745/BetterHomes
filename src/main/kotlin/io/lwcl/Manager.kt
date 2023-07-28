@@ -35,9 +35,9 @@ class Manager(private val plugin: BetterHomes) {
 
     internal fun registerSuggestionProviders(commandManager: PaperCommandManager<CommandSender>) {
         commandManager.parserRegistry().registerSuggestionProvider("players") { commandSender, input ->
-            Bukkit.getOfflinePlayers().toList()
+            Bukkit.getOnlinePlayers().toList()
                 .filter { p ->
-                    commandSender.hasPermission(".suggestion.players") && (p.name?.startsWith(input) ?: false)
+                    commandSender.hasPermission(".suggestion.players") && p.name.startsWith(input)
                 }
                 .mapNotNull { it.name }
         }

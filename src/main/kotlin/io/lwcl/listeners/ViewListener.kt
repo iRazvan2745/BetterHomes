@@ -1,6 +1,6 @@
 package io.lwcl.listeners
 
-import io.lwcl.BetterHomesGUI
+import io.lwcl.BetterHomes
 import io.lwcl.menu.ListMenu
 import net.william278.huskhomes.api.HuskHomesAPI
 import net.william278.huskhomes.event.HomeListEvent
@@ -8,7 +8,7 @@ import net.william278.huskhomes.user.OnlineUser
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
-class ViewListener(private val plugin: BetterHomesGUI) : Listener {
+class ViewListener(private val plugin: BetterHomes) : Listener {
 
     private val api: HuskHomesAPI = HuskHomesAPI.getInstance()
 

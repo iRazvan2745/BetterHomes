@@ -38,7 +38,7 @@ class Settings {
     @YamlKey("menu.control.unset")
     var unsetControlItem: String = "minecraft:gray_dye"
     @YamlKey("menu.control.claimed")
-    var claimedControlItem: String = "minecraft:green_dye"
+    var claimedControlItem: String = "minecraft:lime_dye"
     @YamlKey("menu.control.locked")
     var lockedControlItem: String = "minecraft:red_dye"
 
@@ -46,8 +46,6 @@ class Settings {
     var confirmItem: String = "minecraft:lime_concrete"
     @YamlKey("menu.prompt.cancel")
     var cancelItem: String = "minecraft:red_concrete"
-    @YamlKey("menu.prompt.back")
-    var backItem: String = "minecraft:barrier"
 
     @YamlKey("menu.paginate.first_page")
     var firstPageItem: String = "minecraft:spectral_arrow"
@@ -88,11 +86,10 @@ class Settings {
         }
     }
 
-    fun getOtherIcon(buttonType: ButtonType): ItemStack {
+    fun getPromptIcon(buttonType: ButtonType): ItemStack {
         return when (buttonType) {
             ButtonType.CANCEL -> ItemStack(getMaterial(cancelItem))
             ButtonType.CONFIRM -> ItemStack(getMaterial(confirmItem))
-            ButtonType.BACK -> ItemStack(getMaterial(backItem))
             else -> ItemStack(getMaterial("air"))
         }
     }
