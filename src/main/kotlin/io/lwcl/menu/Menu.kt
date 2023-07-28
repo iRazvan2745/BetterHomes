@@ -10,8 +10,8 @@ import java.util.function.Consumer
 
 abstract class Menu(
     protected val plugin: BetterHomes,
-    protected val title: String,
-    protected val layout: Array<String>
+    title: String,
+    layout: Array<String>
 ) {
     internal val api: HuskHomesAPI = HuskHomesAPI.getInstance()
     private val gui: InventoryGui = InventoryGui(plugin, title, layout)
