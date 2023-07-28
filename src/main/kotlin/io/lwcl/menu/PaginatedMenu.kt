@@ -26,7 +26,7 @@ class ListMenu<T : Home>(
     private val positionMap: Map<Int, T> = mapPositions(positions)
     private val pageNumber: Int = 1
     private val itemsPerPage: Int = 14
-    private val maxHomes = api.getMaxHomeSlots(owner)
+    private val maxHomes = plugin.huskHomesAPI.getMaxHomeSlots(owner)
     private val maxPages: Int = (maxHomes/itemsPerPage) + 1
     
     private fun mapPositions(positions: List<T>): Map<Int, T> {
@@ -37,13 +37,12 @@ class ListMenu<T : Home>(
             val index = position.meta.tags[INDEX_TAG_KEY]?.toIntOrNull() ?: continue
             // Handle indexed positions
             if (!usedIndices.contains(index)) {
-                plugin.logger.info("Index: $index, Position: ${position.name}")
                 usedIndices.add(index)
                 positionMap[index] = position
                 continue
             }
             // Remove duplicate indices and reset to null
-            api.editHomeMetaTags(owner, position.name) { tags ->
+            plugin.huskHomesAPI.editHomeMetaTags(owner, position.name) { tags ->
                 tags.remove(INDEX_TAG_KEY)
             }
         }
@@ -55,7 +54,7 @@ class ListMenu<T : Home>(
                 index++
             }
             usedIndices.add(index)
-            api.editHomeMetaTags(owner, position.name) { tags ->
+            plugin.huskHomesAPI.editHomeMetaTags(owner, position.name) { tags ->
                 tags[INDEX_TAG_KEY] = index.toString()
             }
             positionMap[index] = position
@@ -65,47 +64,94 @@ class ListMenu<T : Home>(
 
     private fun getPosType(position: Home?): PosType {
         return when {
-            positions.size >= maxHomes -> PosType.LOCKED
             position != null -> PosType.CLAIMED
+            positions.size >= maxHomes -> PosType.LOCKED
             else -> PosType.UNSET
         }
     }
 
-    private fun getHomeGroup(): GuiElementGroup {
-        val group = GuiElementGroup('p')
-        // Loop through the range of indices up to 'itemsPerPage'
+    override fun buildMenu(): Consumer<InventoryGui> {
+        return Consumer { menu ->
+            // Add filler items
+            menu.setFiller(ItemStack(settings.getMaterial(settings.menuFillerItem)))
+
+            // Add pagination handling
+            menu.addElement(getGroup(ButtonType.HOME))
+            menu.addElement(getGroup(ButtonType.CONTROL))
+            if (settings.pagesEnabled && maxPages > 1) {
+                menu.addElement(getPaginationGroup())
+            }
+            menu.setPageNumber(pageNumber)
+        }
+    }
+
+    private fun getPaginationGroup(): GuiElementGroup {
+        val paginationMap = mapOf(
+            "page" to pageNumber.toString(),
+            "pages" to maxPages.toString(),
+            "nextPage" to (pageNumber + 1).toString(),
+            "prevPage" to (pageNumber - 1).toString()
+        )
+        val group = GuiElementGroup('Q')
+
+        group.addElement(
+            GuiPageElement(
+                ButtonType.FIRST.slotChar,
+                settings.getPaginateIcon(ButtonType.FIRST),
+                GuiPageElement.PageAction.FIRST,
+                plugin.locale.getLocale("menu.pagination.first_page", paginationMap).toLegacy()
+            )
+        )
+        group.addElement(
+            GuiPageElement(
+                ButtonType.PREVIOUS.slotChar,
+                settings.getPaginateIcon(ButtonType.PREVIOUS),
+                GuiPageElement.PageAction.PREVIOUS,
+                plugin.locale.getLocale("group.pagination.previous_page", paginationMap).toLegacy()
+            )
+        )
+        group.addElement(
+            GuiPageElement(
+                ButtonType.NEXT.slotChar,
+                settings.getPaginateIcon(ButtonType.NEXT),
+                GuiPageElement.PageAction.NEXT,
+                plugin.locale.getLocale("group.pagination.next_page", paginationMap).toLegacy()
+            )
+        )
+        group.addElement(
+            GuiPageElement(
+                ButtonType.LAST.slotChar,
+                settings.getPaginateIcon(ButtonType.LAST),
+                GuiPageElement.PageAction.LAST,
+                plugin.locale.getLocale("menu.pagination.last_page", paginationMap).toLegacy()
+            )
+        )
+        return group
+    }
+
+    private fun getGroup(buttonType: ButtonType): GuiElementGroup {
+        val group = GuiElementGroup(buttonType.slotChar)
 
         val startIndex = (pageNumber - 1) * itemsPerPage + 1
         val endIndex = startIndex + itemsPerPage
         for (index in startIndex until endIndex) {
-            // Get the position at the current index, or null if it doesn't exist
             val position = positionMap[index]
             // Null positions are handled later
-            group.addElement(getHomeButton(position, index, getPosType(position)))
+            if (buttonType == ButtonType.HOME) {
+                group.addElement(createHomeButton(position, index, getPosType(position)))
+            } else {
+                group.addElement(createControlButton(position, index, getPosType(position)))
+            }
         }
         return group
     }
 
-    private fun getControlGroup(): GuiElementGroup {
-        val group = GuiElementGroup('c')
-
-        val startIndex = (pageNumber - 1) * itemsPerPage + 1
-        val endIndex = startIndex + itemsPerPage
-        for (index in startIndex until endIndex) {
-            // Get the position at the current index, or null if it doesn't exist
-            val position = positionMap[index]
-            // Null positions are handled later
-            group.addElement(getControlButton(position, index, getPosType(position)))
-        }
-        return group
-    }
-
-    private fun getHomeButton(position: Home?, posIndex: Int, posType: PosType): StaticGuiElement {
+    private fun createHomeButton(position: Home?, posIndex: Int, posType: PosType): StaticGuiElement {
         val icon = getPosMaterial(position)?.let {
             ItemStack(it)
         }  ?: settings.getHomeIcon(posType)
 
-        return getButton(position, icon, 'P', "home", posType.name, posIndex) { click ->
+        return getButton(position, icon, ButtonType.HOME.slotChar, "home", posType.name, posIndex) { click ->
             if (click.whoClicked is Player) {
                 val player = click.whoClicked as Player
                 when (click.type) {
@@ -124,9 +170,9 @@ class ListMenu<T : Home>(
         }
     }
 
-    private fun getControlButton(position: Home?, posIndex: Int, posType: PosType): StaticGuiElement {
+    private fun createControlButton(position: Home?, posIndex: Int, posType: PosType): StaticGuiElement {
         val icon = settings.getControlIcon(posType)
-        return getButton(position, icon, 'C', "control", posType.name, posIndex) { click ->
+        return getButton(position, icon, ButtonType.CONTROL.slotChar, "control", posType.name, posIndex) { click ->
             if (click.whoClicked is Player) {
                 val player = click.whoClicked as Player
                 when (click.type) {
@@ -167,65 +213,13 @@ class ListMenu<T : Home>(
         )
     }
 
-    override fun buildMenu(): Consumer<InventoryGui> {
-        return Consumer { menu ->
-            // Add filler items
-            menu.setFiller(ItemStack(settings.getMaterial(settings.menuFillerItem)))
-
-            // Add pagination handling
-            menu.addElement(getHomeGroup())
-            menu.addElement(getControlGroup())
-            if (settings.pagesEnabled && maxPages > 1) {
-                val paginationMap = mapOf(
-                    "page" to pageNumber.toString(),
-                    "pages" to maxPages.toString(),
-                    "nextpage" to (pageNumber + 1).toString(),
-                    "prevpage" to (pageNumber - 1).toString()
-                )
-                menu.addElement(
-                    GuiPageElement(
-                        'b',
-                        settings.getPaginateIcon(ButtonType.FIRST),
-                        GuiPageElement.PageAction.FIRST,
-                        plugin.locale.getLocale("menu.pagination.first_page", paginationMap).toLegacy()
-                    )
-                )
-                menu.addElement(
-                    GuiPageElement(
-                        'l',
-                        settings.getPaginateIcon(ButtonType.PREVIOUS),
-                        GuiPageElement.PageAction.PREVIOUS,
-                        plugin.locale.getLocale("menu.pagination.previous_page", paginationMap).toLegacy()
-                    )
-                )
-                menu.addElement(
-                    GuiPageElement(
-                        'n',
-                        settings.getPaginateIcon(ButtonType.NEXT),
-                        GuiPageElement.PageAction.NEXT,
-                        plugin.locale.getLocale("menu.pagination.next_page", paginationMap).toLegacy()
-                    )
-                )
-                menu.addElement(
-                    GuiPageElement(
-                        'e',
-                        settings.getPaginateIcon(ButtonType.LAST),
-                        GuiPageElement.PageAction.LAST,
-                        plugin.locale.getLocale("menu.pagination.last_page", paginationMap).toLegacy()
-                    )
-                )
-            }
-            menu.setPageNumber(pageNumber)
-        }
-    }
-
     private fun handleMainForHome(player: Player, position: Home?, posType: PosType) {
-        val user = api.adaptUser(player)
+        val user = plugin.huskHomesAPI.adaptUser(player)
 
         if (posType == PosType.CLAIMED) {
+            this.close(user)
             if (user != owner && !user.hasPermission("betterhomes.tp.others")) {
-                player.sendMessage(plugin.locale.getLocale("messages.other.error").toComponent())
-                this.close(user)
+                player.sendMessage(plugin.locale.getLocale(PLUGIN_ERROR).toComponent())
                 this.destroy()
                 return
             }
@@ -238,12 +232,11 @@ class ListMenu<T : Home>(
                         )
                     ).toComponent()
                 )
-                this.close(user)
                 this.destroy()
                 return
             }
             try {
-                api.teleportBuilder(user)
+                plugin.huskHomesAPI.teleportBuilder(user)
                     .target(position)
                     .toTimedTeleport()
                     .execute()
@@ -252,14 +245,14 @@ class ListMenu<T : Home>(
                         "owner" to owner.username,
                         "name" to position.name)
                 ).toComponent())
-            } catch (ignored: TeleportationException) {
+            } catch (e: TeleportationException) {
+                plugin.logger.finer("Error while teleporting ${player.name} to home ${position.name} \n  ${e.message}")
                 player.sendMessage(plugin.locale.getExpanded(
                     "messages.teleport.error", mutableMapOf(
                         "owner" to owner.username,
                         "name" to position.name)
                 ).toComponent())
             }
-            this.close(user)
             this.destroy()
         }
         return
@@ -267,24 +260,24 @@ class ListMenu<T : Home>(
 
     // TODO IMPLEMENTATION:
     private fun handleAltForHome(player: Player, position: Home?, posType: PosType) {
-        val user = api.adaptUser(player)
+        val user = plugin.huskHomesAPI.adaptUser(player)
         if (posType == PosType.CLAIMED) {
             position?.let {
                 this.close(user)
                 setPosMaterial(it, plugin.settings.getMaterial("stone"))
                 setPosSuffix(it, "OwO")
-                this.show(user)
+                this.destroy()
             }
         }
     }
 
     private fun handleMainForControl(player: Player, position: Home?, posIndex: Int, posType: PosType) {
-        val user = api.adaptUser(player)
+        val user = plugin.huskHomesAPI.adaptUser(player)
 
         if (posType == PosType.UNSET) {
+            this.close(user)
             if (user != owner && !user.hasPermission("betterhomes.create.others")) {
-                player.sendMessage(plugin.locale.getLocale("messages.other.error").toComponent())
-                this.close(user)
+                player.sendMessage(plugin.locale.getLocale(PLUGIN_ERROR).toComponent())
                 this.destroy()
                 return
             }
@@ -292,7 +285,7 @@ class ListMenu<T : Home>(
             try {
                 plugin.syncMethod {
                     plugin.huskHomes.manager.homes().createHome(user, name, user.position)
-                    api.editHomeMetaTags(owner, name) { tags ->
+                    plugin.huskHomesAPI.editHomeMetaTags(owner, name) { tags ->
                         tags[INDEX_TAG_KEY] = posIndex.toString()
                     }
                 }
@@ -304,7 +297,8 @@ class ListMenu<T : Home>(
                         )
                     ).toComponent()
                 )
-            } catch (ignored: ValidationException) {
+            } catch (e: ValidationException) {
+                plugin.logger.finer("Error while handling control for home ${position?.name} \n ${e.message}")
                 player.sendMessage(
                     plugin.locale.getExpanded(
                         "messages.create_home.error", mutableMapOf(
@@ -314,13 +308,12 @@ class ListMenu<T : Home>(
                     ).toComponent()
                 )
             }
-            this.close(user)
             this.destroy()
         }
         if (posType == PosType.CLAIMED) {
+            this.close(user)
             if (user != owner && !user.hasPermission("betterhomes.delete.others")) {
-                player.sendMessage(plugin.locale.getLocale("messages.other.error").toComponent())
-                this.close(user)
+                player.sendMessage(plugin.locale.getLocale(PLUGIN_ERROR).toComponent())
                 this.destroy()
                 return
             }
@@ -333,7 +326,6 @@ class ListMenu<T : Home>(
                         )
                     ).toComponent()
                 )
-                this.close(user)
                 this.destroy()
                 return
             }
@@ -352,14 +344,14 @@ class ListMenu<T : Home>(
                     ).toComponent()
                 )
             }
-            this.close(user)
             this.destroy()
         }
         return
     }
 
     companion object {
-        private const val INDEX_TAG_KEY = "betterhomesgui:index"
+        private const val INDEX_TAG_KEY = "betterhomes:index"
+        private const val PLUGIN_ERROR = "messages.plugin.error"
 
         fun homes(plugin: BetterHomes, homes: List<Home>, owner: OnlineUser): ListMenu<Home> {
             return ListMenu(plugin, owner, homes, plugin.locale.getLocale(
@@ -369,14 +361,15 @@ class ListMenu<T : Home>(
             ).toLegacy())
         }
 
+        @Suppress("SpellCheckingInspection")
         private fun getMenuLayout(): Array<String> {
             return arrayOf(
                 "         ",
-                " ppppppp ",
+                " hhhhhhh ",
                 " ccccccc ",
-                " ppppppp ",
+                " hhhhhhh ",
                 " ccccccc ",
-                "bl     ne"
+                "ip     nl"
             )
         }
     }

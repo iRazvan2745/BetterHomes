@@ -1,6 +1,7 @@
 package io.lwcl.api.enums
 
-enum class ButtonType {
-    FIRST, PREVIOUS, NEXT, LAST,
-    CANCEL, CONFIRM
+enum class ButtonType(val slotChar: Char) {
+    FIRST('i'), PREVIOUS('p'), NEXT('n'), LAST('l'),
+    CANCEL('c'), CONFIRM('f'),
+    HOME('h'), CONTROL('c')
 }
