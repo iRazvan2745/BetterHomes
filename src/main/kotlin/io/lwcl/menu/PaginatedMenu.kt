@@ -33,6 +33,7 @@ class ListMenu<T : Home>(
         val positionMap = mutableMapOf<Int, T>()
         val usedIndices = mutableSetOf<Int>()
 
+        plugin.logger.finer("[${owner.username}] Mapping positions to their index")
         for (position in positions) {
             val index = position.meta.tags[INDEX_TAG_KEY]?.toIntOrNull() ?: continue
             // Handle indexed positions
@@ -46,6 +47,7 @@ class ListMenu<T : Home>(
                 tags.remove(INDEX_TAG_KEY)
             }
         }
+        plugin.logger.finer("[${owner.username}] Assigning positions to new indexes")
         var index = 1
         for (position in positions) {
             if (position.meta.tags[INDEX_TAG_KEY] != null) continue
@@ -70,8 +72,20 @@ class ListMenu<T : Home>(
         }
     }
 
+    private fun recreate(player: Player) {
+        val user = plugin.huskHomesAPI.adaptUser(player)
+        plugin.huskHomesAPI.getUserHomes(owner).thenApply {
+            plugin.syncMethod {
+                val menu = homes(plugin, it, owner)
+                menu.show(user)
+                menu.setPageNumber(user, pageNumber)
+            }
+        }
+    }
+
     override fun buildMenu(): Consumer<InventoryGui> {
         return Consumer { menu ->
+            plugin.logger.finer("[${owner.username}] Building menu ...")
             // Add filler items
             menu.setFiller(ItemStack(settings.getMaterial(settings.menuFillerItem)))
 
@@ -89,8 +103,8 @@ class ListMenu<T : Home>(
         val paginationMap = mapOf(
             "page" to pageNumber.toString(),
             "pages" to maxPages.toString(),
-            "nextPage" to (pageNumber + 1).toString(),
-            "prevPage" to (pageNumber - 1).toString()
+            "next_page" to (pageNumber + 1).toString(),
+            "prev_page" to (pageNumber - 1).toString()
         )
         val group = GuiElementGroup('Q')
 
@@ -245,6 +259,7 @@ class ListMenu<T : Home>(
                         "owner" to owner.username,
                         "name" to position.name)
                 ).toComponent())
+                recreate(player)
             } catch (e: TeleportationException) {
                 plugin.logger.finer("Error while teleporting ${player.name} to home ${position.name} \n  ${e.message}")
                 player.sendMessage(plugin.locale.getExpanded(

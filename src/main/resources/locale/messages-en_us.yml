@@ -67,6 +67,6 @@ menu:
 
   pagination:
     first_page: "⏪ View first page (1)"
-    previous_page: "◀ View previous page (<prevPage>)"
-    next_page: "View next page (<nextPage>) ▶"
+    previous_page: "◀ View previous page (<prev_page>)"
+    next_page: "View next page (<next_page>) ▶"
     last_page: "View last page (<pages>) ⏩"
