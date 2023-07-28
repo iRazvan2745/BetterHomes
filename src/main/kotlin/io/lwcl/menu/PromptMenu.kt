@@ -30,7 +30,7 @@ class PromptMenu<T : Home>(
                     { click ->
                         if (click.whoClicked is Player) {
                             plugin.syncMethod {
-                                plugin.huskHomesAPI.deleteHome(owner, position.name)
+                                plugin.huskHomes.manager.homes().deleteHome(owner, position.name)
                                 val player = click.whoClicked as Player
                                 player.sendMessage(
                                     plugin.locale.getExpanded(

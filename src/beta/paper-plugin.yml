@@ -1,0 +1,38 @@
+name: ${plugin_name}
+main: io.lwcl.BetterHomes
+version: '${version}'
+api-version: '1.19'
+
+prefix: BetterHomes
+author: LcyDev
+contributors: []
+website: https://github.com/LcyDev
+
+description: '${description}'
+
+load: POSTWORLD
+dependencies:
+  server:
+    HuskHomes:
+      load: BEFORE
+      required: true
+
+permissions:
+  betterhomes.player:
+    description: Gives access to all player commands
+    default: true
+    children:
+      betterhomes.help: true
+      betterhomes.open: true
+      betterhomes.change.icon: true
+      betterhomes.change.suffix: true
+
+  betterhomes.admin:
+    description: Gives access to all admin commands
+    default: op
+    children:
+      betterhomes.open.others: true
+      betterhomes.tp.others: true
+      betterhomes.edit.others: true
+      betterhomes.create.others: true
+      betterhomes.delete.others: true
