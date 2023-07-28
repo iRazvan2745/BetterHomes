@@ -58,7 +58,7 @@ class Settings {
 
     @YamlComment("Please don't remove this version settings")
     @YamlKey("version")
-    val version: String = "1.0.0"
+    var version: String = "1.0.0"
 
     fun getHomeIcon(posType: PosType): ItemStack {
         return when (posType) {
@@ -96,5 +96,9 @@ class Settings {
     
     fun getMaterial(id: String): Material {
         return Material.matchMaterial(id.replace("minecraft:", "")) ?: Material.STONE
+    }
+
+    fun getMaterialOrNull(id: String): Material? {
+        return Material.matchMaterial(id.replace("minecraft:", ""))
     }
 }

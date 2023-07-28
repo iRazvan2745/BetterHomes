@@ -14,7 +14,6 @@ import org.bstats.bukkit.Metrics
 import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
-import java.util.concurrent.Callable
 import java.util.concurrent.Future
 
 
@@ -23,12 +22,12 @@ class BetterHomes : JavaPlugin() {
     private val hookManager: HookManager by lazy { HookManager(this) }
     private val manager: Manager by lazy { Manager(this) }
     lateinit var huskHomes: BukkitHuskHomes
+    lateinit var huskHomesAPI: HuskHomesAPI
 
     val locale: Locales by lazy { Locales(this) }
     private lateinit var configYML: Annotaml<Settings>
-    lateinit var settings: Settings
 
-    var huskHomesAPI: HuskHomesAPI? = null
+    lateinit var settings: Settings
 
     private lateinit var metrics: Metrics
 
@@ -55,9 +54,8 @@ class BetterHomes : JavaPlugin() {
         logger.info("Plugin is disabled")
     }
 
-    fun <T> syncMethod(task: () -> T): Future<T> {
-        val callableTask = Callable { task() }
-        return server.scheduler.callSyncMethod(this, callableTask)
+    fun <T> syncMethod(ignoredTask: () -> T): Future<T> {
+        return server.scheduler.callSyncMethod(this) { ignoredTask() }
     }
 
     fun runAsync(task: Runnable?) {
@@ -104,13 +102,15 @@ class BetterHomes : JavaPlugin() {
     }
 
     fun reloadConfigYAML() {
+        val prevVersion = settings.version
         configYML = manager.loadSettings()
         settings = configYML.get()
-        if (settings.version == "1.0.0") {
+        if (settings.version == prevVersion) {
             logger.info("Configuration config.yml is the latest [!]")
         } else {
             val file = File(dataFolder, "config.yml")
             file.copyTo(File(dataFolder, "old_config.yml"))
+            settings.version = prevVersion
             configYML.save(file)
             logger.info("Configuration config.yml was outdated [!]")
         }

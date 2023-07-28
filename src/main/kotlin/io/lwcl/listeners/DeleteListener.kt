@@ -1,18 +1,27 @@
 package io.lwcl.listeners
 
 import io.lwcl.BetterHomes
-import net.william278.huskhomes.api.HuskHomesAPI
+import io.lwcl.menu.ListMenu
 import net.william278.huskhomes.event.HomeDeleteEvent
+import net.william278.huskhomes.user.OnlineUser
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
 class DeleteListener(private val plugin: BetterHomes) : Listener {
 
-    private val api: HuskHomesAPI = HuskHomesAPI.getInstance()
-
-    //TODO: IMPLEMENT
     @EventHandler
     fun onHomeDelete(event: HomeDeleteEvent) {
-        return
+        val onlineViewer = event.deleter as OnlineUser
+        val offlineOwner = event.home.owner
+        val owner = plugin.server.getPlayer(offlineOwner.uuid) ?: return
+        val onlineOwner = plugin.huskHomesAPI.adaptUser(owner)
+        event.isCancelled = true
+
+        plugin.huskHomesAPI.getUserHomes(offlineOwner).thenAccept {
+            plugin.syncMethod {
+                val menu = ListMenu.homes(plugin, it, onlineOwner)
+                menu.show(onlineViewer)
+            }
+        }
     }
 }

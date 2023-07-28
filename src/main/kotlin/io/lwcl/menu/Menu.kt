@@ -2,7 +2,6 @@ package io.lwcl.menu
 
 import de.themoep.inventorygui.InventoryGui
 import io.lwcl.BetterHomes
-import net.william278.huskhomes.api.HuskHomesAPI
 import net.william278.huskhomes.position.Home
 import net.william278.huskhomes.user.OnlineUser
 import org.bukkit.Material
@@ -13,26 +12,25 @@ abstract class Menu(
     title: String,
     layout: Array<String>
 ) {
-    internal val api: HuskHomesAPI = HuskHomesAPI.getInstance()
     private val gui: InventoryGui = InventoryGui(plugin, title, layout)
 
     protected abstract fun buildMenu(): Consumer<InventoryGui>
 
     fun show(user: OnlineUser) {
         buildMenu().accept(gui)
-        gui.show(api.getPlayer(user))
+        gui.show(plugin.huskHomesAPI.getPlayer(user))
     }
 
     fun setPageNumber(user: OnlineUser, pageNumber: Int) {
-        gui.setPageNumber(api.getPlayer(user), pageNumber)
+        gui.setPageNumber(plugin.huskHomesAPI.getPlayer(user), pageNumber)
     }
 
     fun getPageNumber(user: OnlineUser): Int {
-        return gui.getPageNumber(api.getPlayer(user))
+        return gui.getPageNumber(plugin.huskHomesAPI.getPlayer(user))
     }
 
     fun close(user: OnlineUser) {
-        gui.close(api.getPlayer(user))
+        gui.close(plugin.huskHomesAPI.getPlayer(user))
     }
 
     fun destroy() {
@@ -46,7 +44,7 @@ abstract class Menu(
     }
 
     protected fun setPosMaterial(position: Home, material: Material) {
-        api.editHomeMetaTags(position.owner, position.name) { tags ->
+        plugin.huskHomesAPI.editHomeMetaTags(position.owner, position.name) { tags ->
             tags[ICON_TAG_KEY] = material.key.toString()
         }
     }
@@ -56,13 +54,13 @@ abstract class Menu(
     }
 
     protected fun setPosSuffix(position: Home, suffix: String) {
-        api.editHomeMetaTags(position.owner, position.name) { tags ->
+        plugin.huskHomesAPI.editHomeMetaTags(position.owner, position.name) { tags ->
             tags[SUFFIX_TAG_KEY] = suffix
         }
     }
 
     companion object {
-        private const val ICON_TAG_KEY = "betterhomesgui:icon"
-        private const val SUFFIX_TAG_KEY = "betterhomesgui:suffix"
+        private const val ICON_TAG_KEY = "betterhomes:icon"
+        private const val SUFFIX_TAG_KEY = "betterhomes:suffix"
     }
 }

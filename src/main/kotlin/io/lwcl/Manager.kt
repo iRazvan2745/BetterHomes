@@ -10,6 +10,7 @@ import cloud.commandframework.paper.PaperCommandManager
 import io.lwcl.config.Settings
 import net.william278.annotaml.Annotaml
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import java.io.File
 import java.io.IOException
@@ -40,6 +41,17 @@ class Manager(private val plugin: BetterHomes) {
                     commandSender.hasPermission(".suggestion.players") && p.name.startsWith(input)
                 }
                 .mapNotNull { it.name }
+        }
+        commandManager.parserRegistry().registerSuggestionProvider("materials") { _, _ ->
+            Material.entries.map { key -> key.name }.toList()
+        }
+        commandManager.parserRegistry().registerSuggestionProvider("homes") { _, _ ->
+            emptyList()
+//            val user = plugin.huskHomesAPI.adaptUser(commandSender.sender as Player)
+//            val homeNames = plugin.syncMethod {
+//                plugin.huskHomesAPI.getUserHomes(user).thenApply { it.map {key -> key.name}.toList() }.join()
+//            }
+//            homeNames.get()
         }
     }
 
