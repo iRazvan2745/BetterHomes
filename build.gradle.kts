@@ -48,8 +48,9 @@ dependencies {
     compileOnly("net.william278:huskhomes:4.4.5")
 
     implementation("org.bstats:bstats-bukkit:3.0.2")
-    implementation("net.william278:annotaml:2.0.5")
+    implementation("org.yaml:snakeyaml:2.0")
     implementation("dev.dejvokep:boosted-yaml:1.3.1")
+    implementation("net.william278:annotaml:2.0.5")
     implementation("cloud.commandframework:cloud-paper:1.8.3")
     implementation("cloud.commandframework:cloud-annotations:1.8.3")
     implementation("de.themoep:inventorygui:1.6.1-SNAPSHOT")
@@ -89,9 +90,6 @@ tasks {
         minimize {
             relocate("cloud.commandframework", "io.lwcl.cloud")
             relocate("org.bstats", "io.lwcl.api.bstats")
-//            relocate("net.william278.annotaml", "io.lwcl.api.annotaml")
-//            relocate("de.themoep.inventorygui", "io.lwcl.api.inventorygui")
-//            relocate("org.ipvp.canvas", "io.lwcl.api.canvas")
         }
     }
 }

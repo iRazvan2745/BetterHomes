@@ -1,3 +1,4 @@
+# noinspection YAMLSchemaValidation
 name: ${plugin_name}
 version: '${version}'
 main: io.lwcl.BetterHomes
@@ -23,6 +24,8 @@ permissions:
     children:
       betterhomes.help: true
       betterhomes.open: true
+      betterhomes.change.icon: true
+      betterhomes.change.suffix: true
 
   betterhomes.admin:
     description: Gives access to all admin commands

@@ -6,12 +6,12 @@ import net.william278.huskhomes.api.HuskHomesAPI
 import org.bukkit.plugin.ServicePriority
 
 class HookManager(private val plugin: BetterHomes) {
-
     /**
      * Method for check if plugin is installed
      * @param pluginName - String name of plugin is CaseSensitive
      * @return Boolean
      */
+    @Suppress("SameParameterValue")
     private fun isPluginInstalled(pluginName: String): Boolean {
         return plugin.pluginManager.getPlugin(pluginName) != null
     }
