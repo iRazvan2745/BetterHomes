@@ -1,6 +1,9 @@
 package io.lwcl.menu
 
-import de.themoep.inventorygui.*
+import de.themoep.inventorygui.GuiElementGroup
+import de.themoep.inventorygui.GuiPageElement
+import de.themoep.inventorygui.InventoryGui
+import de.themoep.inventorygui.StaticGuiElement
 import io.lwcl.BetterHomes
 import io.lwcl.api.enums.ButtonType
 import io.lwcl.api.enums.PosType
@@ -33,21 +36,23 @@ class ListMenu<T : Home>(
         val positionMap = mutableMapOf<Int, T>()
         val usedIndices = mutableSetOf<Int>()
 
-        plugin.logger.finer("[${owner.username}] Mapping positions to their index")
+        plugin.logger.fine("Mapping positions to their index:")
         for (position in positions) {
             val index = position.meta.tags[INDEX_TAG_KEY]?.toIntOrNull() ?: continue
             // Handle indexed positions
             if (!usedIndices.contains(index)) {
                 usedIndices.add(index)
                 positionMap[index] = position
+                plugin.logger.fine(" * ${position.name} : $index ")
                 continue
             }
             // Remove duplicate indices and reset to null
             plugin.huskHomesAPI.editHomeMetaTags(owner, position.name) { tags ->
                 tags.remove(INDEX_TAG_KEY)
             }
+            plugin.logger.warning(" * Home ${position.name} had a duplicate index. Resetting to null.")
         }
-        plugin.logger.finer("[${owner.username}] Assigning positions to new indexes")
+        plugin.logger.fine("Assigning positions to new indexes:")
         var index = 1
         for (position in positions) {
             if (position.meta.tags[INDEX_TAG_KEY] != null) continue
@@ -60,6 +65,7 @@ class ListMenu<T : Home>(
                 tags[INDEX_TAG_KEY] = index.toString()
             }
             positionMap[index] = position
+            plugin.logger.fine(" * ${position.name} : $index ")
         }
         return positionMap.toMap()
     }
@@ -85,7 +91,7 @@ class ListMenu<T : Home>(
 
     override fun buildMenu(): Consumer<InventoryGui> {
         return Consumer { menu ->
-            plugin.logger.finer("[${owner.username}] Building menu ...")
+            plugin.logger.fine("Building menu ...")
             // Add filler items
             menu.setFiller(ItemStack(settings.getMaterial(settings.menuFillerItem)))
 
@@ -261,7 +267,7 @@ class ListMenu<T : Home>(
                 ).toComponent())
                 recreate(player)
             } catch (e: TeleportationException) {
-                plugin.logger.finer("Error while teleporting ${player.name} to home ${position.name} \n  ${e.message}")
+                plugin.logger.fine("Error while teleporting ${player.name} to home ${position.name} \n  ${e.message}")
                 player.sendMessage(plugin.locale.getExpanded(
                     "messages.teleport.error", mutableMapOf(
                         "owner" to owner.username,
@@ -313,7 +319,7 @@ class ListMenu<T : Home>(
                     ).toComponent()
                 )
             } catch (e: ValidationException) {
-                plugin.logger.finer("Error while handling control for home ${position?.name} \n ${e.message}")
+                plugin.logger.fine("Error while handling control for home ${position?.name} \n ${e.message}")
                 player.sendMessage(
                     plugin.locale.getExpanded(
                         "messages.create_home.error", mutableMapOf(
