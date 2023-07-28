@@ -45,14 +45,6 @@ class Manager(private val plugin: BetterHomes) {
         commandManager.parserRegistry().registerSuggestionProvider("materials") { _, _ ->
             Material.entries.map { key -> key.name }.toList()
         }
-        commandManager.parserRegistry().registerSuggestionProvider("homes") { _, _ ->
-            emptyList()
-//            val user = plugin.huskHomesAPI.adaptUser(commandSender.sender as Player)
-//            val homeNames = plugin.syncMethod {
-//                plugin.huskHomesAPI.getUserHomes(user).thenApply { it.map {key -> key.name}.toList() }.join()
-//            }
-//            homeNames.get()
-        }
     }
 
     internal fun createAnnotationParser(commandManager: PaperCommandManager<CommandSender>): AnnotationParser<CommandSender> {
