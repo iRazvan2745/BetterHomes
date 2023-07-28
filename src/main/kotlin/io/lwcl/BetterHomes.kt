@@ -106,6 +106,7 @@ class BetterHomes : JavaPlugin() {
         settings = configYML.get()
         try {
             logger.level = Level.parse(settings.logLevel)
+            logger.info("Logging level was set to: ${settings.logLevel}")
         } catch (ignored: IllegalAccessException) {
             logger.warning("Invalid log level: ${settings.logLevel}")
         }
