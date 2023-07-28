@@ -53,8 +53,8 @@ class BetterHomesCMD(private val plugin: BetterHomes) {
             val onlineOwner = api.adaptUser(player)
 
             api.getUserHomes(onlineOwner).thenAccept {
-                val menu = ListMenu.homes(plugin, it.toList(), onlineOwner)
                 plugin.syncMethod {
+                    val menu = ListMenu.homes(plugin, it.toList(), onlineOwner)
                     menu.show(onlineSender)
                 }
             }

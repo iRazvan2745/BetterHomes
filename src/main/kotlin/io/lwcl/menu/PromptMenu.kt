@@ -14,7 +14,6 @@ class PromptMenu<T : Home>(
     plugin: BetterHomes,
     private val owner: OnlineUser,
     private val position: T,
-    private val parentMenu: ListMenu<T>,
     private val pageNumber: Int,
     title: String,
 ) : Menu(plugin, title, getConfirmMenuLayout()) {
@@ -30,21 +29,19 @@ class PromptMenu<T : Home>(
                     settings.getPromptIcon(ButtonType.CONFIRM),
                     { click ->
                         if (click.whoClicked is Player) {
-                            api.deleteHome(owner, position.name)
-                            val player = click.whoClicked as Player
-                            player.sendMessage(
-                                plugin.locale.getLocale(
-                                    "messages.delete_home.success", mutableMapOf(
-                                        "owner" to owner.username,
-                                        "name" to position.name
-                                    )
-                                ).toComponent()
-                            )
-                            val user = api.adaptUser(player)
-                            this.close(user)
-                            parentMenu.show(user)
-                            parentMenu.setPageNumber(user, pageNumber)
-                            this.destroy()
+                            plugin.syncMethod {
+                                api.deleteHome(owner, position.name)
+                                val player = click.whoClicked as Player
+                                player.sendMessage(
+                                    plugin.locale.getExpanded(
+                                        "messages.delete_home.success", mutableMapOf(
+                                            "owner" to owner.username,
+                                            "name" to position.name
+                                        )
+                                    ).toComponent()
+                                )
+                                recreateParent(player)
+                            }
                         }
                         return@StaticGuiElement true
                     },
@@ -61,11 +58,7 @@ class PromptMenu<T : Home>(
                     { click ->
                         if (click.whoClicked is Player) {
                             val player = click.whoClicked as Player
-                            val user = api.adaptUser(player)
-                            this.close(user)
-                            parentMenu.show(user)
-                            parentMenu.setPageNumber(user, pageNumber)
-                            this.destroy()
+                            recreateParent(player)
                         }
                         return@StaticGuiElement true
                     },
@@ -78,10 +71,22 @@ class PromptMenu<T : Home>(
         }
     }
 
+    private fun recreateParent(player: Player) {
+        val user = api.adaptUser(player)
+        this.close(user)
+        this.destroy()
+        api.getUserHomes(owner).thenApply {
+            plugin.syncMethod {
+                val newParent = ListMenu.homes(plugin, it, owner)
+                newParent.show(user)
+                newParent.setPageNumber(user, pageNumber)
+            }
+        }
+    }
 
     companion object {
-        fun <T : Home> create(plugin: BetterHomes, owner: OnlineUser, position: T, parentMenu: ListMenu<T>, pageNumber: Int): PromptMenu<T> {
-            return PromptMenu(plugin, owner, position, parentMenu, pageNumber, plugin.locale.getLocale(
+        fun <T : Home> create(plugin: BetterHomes, owner: OnlineUser, position: T, pageNumber: Int): PromptMenu<T> {
+            return PromptMenu(plugin, owner, position, pageNumber, plugin.locale.getLocale(
                     "menu.prompt.title", mapOf(
                         "action" to "deletion",
                         "object" to position.name
