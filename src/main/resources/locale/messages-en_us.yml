@@ -14,8 +14,8 @@ messages:
     not_player: "<prefix> <red>Only a player can use this command.</red>"
 
   other:
-    change_suffix: "<prefix> <cyan>Home alias <suffix> of home <home> was saved for <owner></cyan>"
-    change_material: "<prefix> <cyan>Home icon <suffix> of home <home> was saved for <owner></cyan>"
+    change_suffix: "<prefix> <aqua>Home alias <suffix> of home <home> was saved for <owner></aqua>"
+    change_material: "<prefix> <aqua>Home icon <suffix> of home <home> was saved for <owner></aqua>"
     invalid_material: "<prefix> <red>Invalid icon material.</red>"
     invalid_home: "<prefix> <red>Invalid home name.</red>"
 
