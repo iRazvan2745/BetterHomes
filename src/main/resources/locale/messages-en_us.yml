@@ -7,11 +7,17 @@
 # ┗━ Formatted in MiniMessage: https://docs.advntr.dev/minimessage/format.html
 
 messages:
-  other:
+  plugin:
     config_reload: "<prefix> <green>Config was successfully reloaded !</green>"
     translation_missing: "<prefix> <red>Translation <key> missing.... contact developer of this plugin</red>"
     error: "<prefix> <red>You can't do that !</red>"
     not_player: "<prefix> <red>Only a player can use this command.</red>"
+
+  other:
+    change_suffix: "<prefix> <cyan>Home alias <suffix> of home <home> was saved for <owner></cyan>"
+    change_material: "<prefix> <cyan>Home icon <suffix> of home <home> was saved for <owner></cyan>"
+    invalid_material: "<prefix> <red>Invalid icon material.</red>"
+    invalid_home: "<prefix> <red>Invalid home name.</red>"
 
   teleport:
     error: "<prefix> <red>Could not teleport to <name> home from <owner></red>"
@@ -34,7 +40,7 @@ menu:
       name: "<gray><bold>NO HOME SET</bold></gray>"
       details: "<white>Click to create home.</white>"
     claimed:
-      name: "<green><bold>HOME <number>: <suffix> </bold></green>"
+      name: "<green><bold>HOME <number>:</bold></green> <suffix>"
       details: "<white>Click to delete this home</white>"
     locked:
       name: "<dark_red><bold>HOME LIMIT REACHED</bold></dark_red>"
@@ -44,7 +50,7 @@ menu:
       name: "<gray><bold>NO HOME SET</bold></gray>"
       details: ""
     claimed:
-      name: "<green><bold>HOME <number>: <suffix> </bold></green>"
+      name: "<green><bold>HOME <number>:</bold></green> <suffix>"
       details: "<white>Click to teleport to this home</white>"
     locked:
       name: "<dark_red><bold>HOME LIMIT REACHED</bold></dark_red>"
@@ -61,6 +67,6 @@ menu:
 
   pagination:
     first_page: "⏪ View first page (1)"
-    previous_page: "◀ View previous page (<prevpage>)"
-    next_page: "View next page (<nextpage>) ▶"
+    previous_page: "◀ View previous page (<prevPage>)"
+    next_page: "View next page (<nextPage>) ▶"
     last_page: "View last page (<pages>) ⏩"
