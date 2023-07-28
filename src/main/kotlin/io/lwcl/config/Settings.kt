@@ -1,6 +1,7 @@
 package io.lwcl.config
 
 import io.lwcl.api.enums.ButtonType
+import io.lwcl.api.enums.PageButton
 import io.lwcl.api.enums.PosType
 import net.william278.annotaml.YamlComment
 import net.william278.annotaml.YamlFile
@@ -81,13 +82,20 @@ class Settings {
         }
     }
 
-    fun getPaginateIcon(buttonType: ButtonType): ItemStack {
+    fun getPosIcon(posType: PosType): ItemStack {
+        return when (posType) {
+            PosType.CLAIMED -> ItemStack(getMaterial(claimedControlItem))
+            PosType.LOCKED -> ItemStack(getMaterial(lockedControlItem))
+            PosType.UNSET -> ItemStack(getMaterial(unsetControlItem))
+        }
+    }
+
+    fun getPaginateIcon(buttonType: PageButton): ItemStack {
         return when (buttonType) {
-            ButtonType.FIRST -> ItemStack(getMaterial(firstPageItem))
-            ButtonType.PREVIOUS -> ItemStack(getMaterial(prevPageItem))
-            ButtonType.NEXT -> ItemStack(getMaterial(nextPageItem))
-            ButtonType.LAST -> ItemStack(getMaterial(lastPageItem))
-            else -> ItemStack(getMaterial("air"))
+            PageButton.FIRST -> ItemStack(getMaterial(firstPageItem))
+            PageButton.PREVIOUS -> ItemStack(getMaterial(prevPageItem))
+            PageButton.NEXT -> ItemStack(getMaterial(nextPageItem))
+            PageButton.LAST -> ItemStack(getMaterial(lastPageItem))
         }
     }
 
