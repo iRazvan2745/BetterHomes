@@ -8,16 +8,21 @@ import io.lwcl.listeners.CreateListener
 import io.lwcl.listeners.DeleteListener
 import io.lwcl.listeners.ViewListener
 import net.william278.annotaml.Annotaml
+import net.william278.huskhomes.BukkitHuskHomes
 import net.william278.huskhomes.api.HuskHomesAPI
 import org.bstats.bukkit.Metrics
 import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
+import java.util.concurrent.Callable
+import java.util.concurrent.Future
+
 
 class BetterHomes : JavaPlugin() {
     val pluginManager: PluginManager = server.pluginManager
     private val hookManager: HookManager by lazy { HookManager(this) }
     private val manager: Manager by lazy { Manager(this) }
+    lateinit var huskHomes: BukkitHuskHomes
 
     val locale: Locales by lazy { Locales(this) }
     private lateinit var configYML: Annotaml<Settings>
@@ -34,7 +39,7 @@ class BetterHomes : JavaPlugin() {
     override fun onLoad() {
         settings = Settings()
         reloadConfigYAML()
-        locale.setLanguageFile(settings.language)
+        reloadLocaleYML()
     }
 
     override fun onEnable() {
@@ -48,6 +53,16 @@ class BetterHomes : JavaPlugin() {
 
     override fun onDisable() {
         logger.info("Plugin is disabled")
+    }
+
+    fun <T> syncMethod(task: () -> T): Future<T> {
+        val callableTask = Callable { task() }
+        return server.scheduler.callSyncMethod(this, callableTask)
+    }
+
+    fun runAsync(task: Runnable?) {
+        val scheduler = server.scheduler
+        scheduler.runTaskAsynchronously(this, task!!)
     }
 
     private fun hookRegistration() {
@@ -77,6 +92,10 @@ class BetterHomes : JavaPlugin() {
             logger.info("Bukkit Listener ${listener::class.simpleName} registered -> ok")
         }
         logger.info("Listeners registered(${listeners.size}) in time ${System.currentTimeMillis() - start} ms -> ok")
+    }
+
+    fun reloadLocaleYML() {
+        locale.setLanguageFile(settings.language)
     }
 
     fun saveConfigYAML() {

@@ -18,8 +18,9 @@ class BetterHomesCMD(private val plugin: BetterHomes) {
     @CommandPermission("betterhomes.reload")
     fun onReload(commandSender: CommandSender) {
         plugin.reloadConfigYAML()
+        plugin.reloadLocaleYML()
         commandSender.sendMessage(plugin.locale.getLocale("messages.other.config_reload").toComponent())
-        plugin.logger.info("Config.yml was reloaded !")
+        plugin.logger.info("Config.yml was reloaded [!]")
     }
 
     //TODO: FIX
@@ -29,9 +30,11 @@ class BetterHomesCMD(private val plugin: BetterHomes) {
         if (commandSender is Player) {
             val onlineSender = api.adaptUser(commandSender)
 
-            api.getUserHomes(onlineSender).thenApply {
-                val menu = ListMenu.homes(plugin, it, onlineSender)
-                menu.show(onlineSender)
+            api.getUserHomes(onlineSender).thenAccept {
+                val menu = ListMenu.homes(plugin, it.toList(), onlineSender)
+                plugin.syncMethod {
+                    menu.show(onlineSender)
+                }
             }
         } else {
             commandSender.sendMessage(plugin.locale.getLocale("messages.other.not_player").toComponent())
@@ -49,9 +52,11 @@ class BetterHomesCMD(private val plugin: BetterHomes) {
             val onlineSender = api.adaptUser(commandSender)
             val onlineOwner = api.adaptUser(player)
 
-            api.getUserHomes(onlineOwner).thenApply {
-                val menu = ListMenu.homes(plugin, it, onlineOwner)
-                menu.show(onlineSender)
+            api.getUserHomes(onlineOwner).thenAccept {
+                val menu = ListMenu.homes(plugin, it.toList(), onlineOwner)
+                plugin.syncMethod {
+                    menu.show(onlineSender)
+                }
             }
         } else {
             commandSender.sendMessage(plugin.locale.getLocale("messages.other.not_player").toComponent())

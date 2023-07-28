@@ -1,6 +1,7 @@
 package io.lwcl.api
 
 import io.lwcl.BetterHomes
+import net.william278.huskhomes.BukkitHuskHomes
 import net.william278.huskhomes.api.HuskHomesAPI
 import org.bukkit.plugin.ServicePriority
 
@@ -21,6 +22,7 @@ class HookManager(private val plugin: BetterHomes) {
 
     fun hookHuskHomes() {
         if (isPluginInstalled("HuskHomes")) {
+            plugin.huskHomes = plugin.server.pluginManager.getPlugin("HuskHomes") as BukkitHuskHomes
             plugin.huskHomesAPI = HuskHomesAPI.getInstance()
             plugin.server.servicesManager.register(HuskHomesAPI::class.java, HuskHomesAPI.getInstance(), plugin, ServicePriority.Highest)
             plugin.logger.info("Successfully hooked to HuskHomes.")
