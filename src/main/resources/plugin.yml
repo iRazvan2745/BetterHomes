@@ -10,7 +10,7 @@ website: https://github.com/LcyDev
 load: POSTWORLD
 depend:
   - HuskHomes
-softdepend: [PlaceholderAPI]
+softdepend: []
 libraries:
   - org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0
   - com.squareup.okhttp3:okhttp:4.10.0
