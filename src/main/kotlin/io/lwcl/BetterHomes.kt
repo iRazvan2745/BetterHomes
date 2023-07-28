@@ -4,8 +4,6 @@ import io.lwcl.api.HookManager
 import io.lwcl.commands.BetterHomesCMD
 import io.lwcl.config.Locales
 import io.lwcl.config.Settings
-import io.lwcl.listeners.CreateListener
-import io.lwcl.listeners.DeleteListener
 import io.lwcl.listeners.ViewListener
 import net.william278.annotaml.Annotaml
 import net.william278.huskhomes.BukkitHuskHomes
@@ -15,6 +13,7 @@ import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.util.concurrent.Future
+import java.util.logging.Level
 
 
 class BetterHomes : JavaPlugin() {
@@ -82,8 +81,8 @@ class BetterHomes : JavaPlugin() {
         val start = System.currentTimeMillis()
         val listeners = listOf(
             ViewListener(this),
-            CreateListener(this),
-            DeleteListener(this)
+//            CreateListener(this),
+//            DeleteListener(this)
         )
         listeners.forEach { listener ->
             pluginManager.registerEvents(listener, this)
@@ -105,6 +104,11 @@ class BetterHomes : JavaPlugin() {
         val prevVersion = settings.version
         configYML = manager.loadSettings()
         settings = configYML.get()
+        try {
+            logger.level = Level.parse(settings.logLevel)
+        } catch (ignored: IllegalAccessException) {
+            logger.warning("Invalid log level: ${settings.logLevel}")
+        }
         if (settings.version == prevVersion) {
             logger.info("Configuration config.yml is the latest [!]")
         } else {

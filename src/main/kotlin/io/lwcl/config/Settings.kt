@@ -23,6 +23,11 @@ class Settings {
     var prefix: String = "<dark_gray>[<aqua>BetterHomes</aqua>]</dark_gray>"
     @YamlKey("plugin.language")
     var language: String = "en_us"
+    @YamlComment(
+        "Values: SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST, ALL."
+    )
+    @YamlKey("plugin.log-level")
+    var logLevel: String = "INFO"
     @YamlKey("plugin.pages")
     var pagesEnabled: Boolean = true
 
