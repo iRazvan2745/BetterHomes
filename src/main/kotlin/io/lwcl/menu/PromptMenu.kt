@@ -25,12 +25,12 @@ class PromptMenu<T : Home>(
             menu.setFiller(ItemStack(settings.getMaterial(settings.menuFillerItem)))
             menu.addElement(
                 StaticGuiElement(
-                    'f',
+                    ButtonType.CONFIRM.slotChar,
                     settings.getPromptIcon(ButtonType.CONFIRM),
                     { click ->
                         if (click.whoClicked is Player) {
                             plugin.syncMethod {
-                                api.deleteHome(owner, position.name)
+                                plugin.huskHomesAPI.deleteHome(owner, position.name)
                                 val player = click.whoClicked as Player
                                 player.sendMessage(
                                     plugin.locale.getExpanded(
@@ -53,7 +53,7 @@ class PromptMenu<T : Home>(
             )
             menu.addElement(
                 StaticGuiElement(
-                    'c',
+                    ButtonType.CANCEL.slotChar,
                     settings.getPromptIcon(ButtonType.CANCEL),
                     { click ->
                         if (click.whoClicked is Player) {
@@ -72,16 +72,16 @@ class PromptMenu<T : Home>(
     }
 
     private fun recreateParent(player: Player) {
-        val user = api.adaptUser(player)
+        val user = plugin.huskHomesAPI.adaptUser(player)
         this.close(user)
-        this.destroy()
-        api.getUserHomes(owner).thenApply {
+        plugin.huskHomesAPI.getUserHomes(owner).thenApply {
             plugin.syncMethod {
                 val newParent = ListMenu.homes(plugin, it, owner)
                 newParent.show(user)
                 newParent.setPageNumber(user, pageNumber)
             }
         }
+        this.destroy()
     }
 
     companion object {
