@@ -45,16 +45,15 @@ repositories {
 dependencies {
     paperweight.paperDevBundle(providers.gradleProperty("server_version").get())
     compileOnly("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    compileOnly("org.yaml:snakeyaml:2.0")
+    compileOnly("dev.dejvokep:boosted-yaml:1.3.1")
     compileOnly("net.william278:huskhomes:4.4.5")
 
-    implementation("org.bstats:bstats-bukkit:3.0.2")
-    implementation("org.yaml:snakeyaml:2.0")
-    implementation("dev.dejvokep:boosted-yaml:1.3.1")
     implementation("net.william278:annotaml:2.0.5")
+    implementation("de.themoep:inventorygui:1.6.1-SNAPSHOT")
+    implementation("org.bstats:bstats-bukkit:3.0.2")
     implementation("cloud.commandframework:cloud-paper:1.8.3")
     implementation("cloud.commandframework:cloud-annotations:1.8.3")
-    implementation("de.themoep:inventorygui:1.6.1-SNAPSHOT")
-//    implementation("com.github.ipvp-mc:canvas:master-SNAPSHOT")
 }
 
 kotlin {
