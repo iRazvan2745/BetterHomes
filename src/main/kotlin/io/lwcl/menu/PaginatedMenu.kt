@@ -6,6 +6,7 @@ import de.themoep.inventorygui.InventoryGui
 import de.themoep.inventorygui.StaticGuiElement
 import io.lwcl.BetterHomes
 import io.lwcl.api.enums.ButtonType
+import io.lwcl.api.enums.PageButton
 import io.lwcl.api.enums.PosType
 import net.william278.huskhomes.position.Home
 import net.william278.huskhomes.teleport.TeleportationException
@@ -38,7 +39,7 @@ class ListMenu<T : Home>(
 
         plugin.logger.fine("Mapping positions to their index:")
         for (position in positions) {
-            val index = position.meta.tags[INDEX_TAG_KEY]?.toIntOrNull() ?: continue
+            val index = position.meta.tags[HOME_INDEX_TAG_KEY]?.toIntOrNull() ?: continue
             // Handle indexed positions
             if (!usedIndices.contains(index)) {
                 usedIndices.add(index)
@@ -48,21 +49,21 @@ class ListMenu<T : Home>(
             }
             // Remove duplicate indices and reset to null
             plugin.huskHomesAPI.editHomeMetaTags(owner, position.name) { tags ->
-                tags.remove(INDEX_TAG_KEY)
+                tags.remove(HOME_INDEX_TAG_KEY)
             }
             plugin.logger.warning(" * Home ${position.name} had a duplicate index. Resetting to null.")
         }
         plugin.logger.fine("Assigning positions to new indexes:")
         var index = 1
         for (position in positions) {
-            if (position.meta.tags[INDEX_TAG_KEY] != null) continue
+            if (position.meta.tags[HOME_INDEX_TAG_KEY] != null) continue
             // Handle non-indexed positions and assign new unused indices
             while (usedIndices.contains(index)) {
                 index++
             }
             usedIndices.add(index)
             plugin.huskHomesAPI.editHomeMetaTags(owner, position.name) { tags ->
-                tags[INDEX_TAG_KEY] = index.toString()
+                tags[HOME_INDEX_TAG_KEY] = index.toString()
             }
             positionMap[index] = position
             plugin.logger.fine(" * ${position.name} : $index ")
@@ -70,23 +71,8 @@ class ListMenu<T : Home>(
         return positionMap.toMap()
     }
 
-    private fun getPosType(position: Home?): PosType {
-        return when {
-            position != null -> PosType.CLAIMED
-            positions.size >= maxHomes -> PosType.LOCKED
-            else -> PosType.UNSET
-        }
-    }
-
-    private fun recreate(player: Player) {
-        val user = plugin.huskHomesAPI.adaptUser(player)
-        plugin.huskHomesAPI.getUserHomes(owner).thenApply {
-            plugin.syncMethod {
-                val menu = homes(plugin, it, owner)
-                menu.show(user)
-                menu.setPageNumber(user, pageNumber)
-            }
-        }
+    //TODO: IMPLEMENT
+    private fun reload(player: Player) {
     }
 
     override fun buildMenu(): Consumer<InventoryGui> {
@@ -99,54 +85,29 @@ class ListMenu<T : Home>(
             menu.addElement(getGroup(ButtonType.HOME))
             menu.addElement(getGroup(ButtonType.CONTROL))
             if (settings.pagesEnabled && maxPages > 1) {
-                menu.addElement(getPaginationGroup())
-            }
+                plugin.logger.fine("Loaded Pagination")
+                menu.addElement(createPageElement(PageButton.FIRST))
+                menu.addElement(createPageElement(PageButton.PREVIOUS))
+                menu.addElement(createPageElement(PageButton.NEXT))
+                menu.addElement(createPageElement(PageButton.LAST))            }
             menu.setPageNumber(pageNumber)
         }
     }
 
-    private fun getPaginationGroup(): GuiElementGroup {
+    private fun createPageElement(pageButton: PageButton): GuiPageElement {
         val paginationMap = mapOf(
             "page" to pageNumber.toString(),
             "pages" to maxPages.toString(),
             "next_page" to (pageNumber + 1).toString(),
             "prev_page" to (pageNumber - 1).toString()
         )
-        val group = GuiElementGroup('Q')
 
-        group.addElement(
-            GuiPageElement(
-                ButtonType.FIRST.slotChar,
-                settings.getPaginateIcon(ButtonType.FIRST),
-                GuiPageElement.PageAction.FIRST,
-                plugin.locale.getLocale("menu.pagination.first_page", paginationMap).toLegacy()
-            )
+        return GuiPageElement(
+            pageButton.slotChar,
+            settings.getPaginateIcon(pageButton),
+            GuiPageElement.PageAction.valueOf(pageButton.name),
+            plugin.locale.getLocale("menu.pagination.${pageButton.name.lowercase()}", paginationMap).toLegacy()
         )
-        group.addElement(
-            GuiPageElement(
-                ButtonType.PREVIOUS.slotChar,
-                settings.getPaginateIcon(ButtonType.PREVIOUS),
-                GuiPageElement.PageAction.PREVIOUS,
-                plugin.locale.getLocale("group.pagination.previous_page", paginationMap).toLegacy()
-            )
-        )
-        group.addElement(
-            GuiPageElement(
-                ButtonType.NEXT.slotChar,
-                settings.getPaginateIcon(ButtonType.NEXT),
-                GuiPageElement.PageAction.NEXT,
-                plugin.locale.getLocale("group.pagination.next_page", paginationMap).toLegacy()
-            )
-        )
-        group.addElement(
-            GuiPageElement(
-                ButtonType.LAST.slotChar,
-                settings.getPaginateIcon(ButtonType.LAST),
-                GuiPageElement.PageAction.LAST,
-                plugin.locale.getLocale("menu.pagination.last_page", paginationMap).toLegacy()
-            )
-        )
-        return group
     }
 
     private fun getGroup(buttonType: ButtonType): GuiElementGroup {
@@ -239,7 +200,7 @@ class ListMenu<T : Home>(
         if (posType == PosType.CLAIMED) {
             this.close(user)
             if (user != owner && !user.hasPermission("betterhomes.tp.others")) {
-                player.sendMessage(plugin.locale.getLocale(PLUGIN_ERROR).toComponent())
+                player.sendMessage(plugin.locale.getLocale(PLUGIN_ERROR_MESSAGE).toComponent())
                 this.destroy()
                 return
             }
@@ -298,7 +259,7 @@ class ListMenu<T : Home>(
         if (posType == PosType.UNSET) {
             this.close(user)
             if (user != owner && !user.hasPermission("betterhomes.create.others")) {
-                player.sendMessage(plugin.locale.getLocale(PLUGIN_ERROR).toComponent())
+                player.sendMessage(plugin.locale.getLocale(PLUGIN_ERROR_MESSAGE).toComponent())
                 this.destroy()
                 return
             }
@@ -307,7 +268,7 @@ class ListMenu<T : Home>(
                 plugin.syncMethod {
                     plugin.huskHomes.manager.homes().createHome(user, name, user.position)
                     plugin.huskHomesAPI.editHomeMetaTags(owner, name) { tags ->
-                        tags[INDEX_TAG_KEY] = posIndex.toString()
+                        tags[HOME_INDEX_TAG_KEY] = posIndex.toString()
                     }
                 }
                 player.sendMessage(
@@ -334,7 +295,7 @@ class ListMenu<T : Home>(
         if (posType == PosType.CLAIMED) {
             this.close(user)
             if (user != owner && !user.hasPermission("betterhomes.delete.others")) {
-                player.sendMessage(plugin.locale.getLocale(PLUGIN_ERROR).toComponent())
+                player.sendMessage(plugin.locale.getLocale(PLUGIN_ERROR_MESSAGE).toComponent())
                 this.destroy()
                 return
             }
@@ -371,8 +332,8 @@ class ListMenu<T : Home>(
     }
 
     companion object {
-        private const val INDEX_TAG_KEY = "betterhomes:index"
-        private const val PLUGIN_ERROR = "messages.plugin.error"
+        private const val HOME_INDEX_TAG_KEY = "betterhomes:index"
+        private const val PLUGIN_ERROR_MESSAGE = "messages.plugin.error"
 
         fun homes(plugin: BetterHomes, homes: List<Home>, owner: OnlineUser): ListMenu<Home> {
             return ListMenu(plugin, owner, homes, plugin.locale.getLocale(

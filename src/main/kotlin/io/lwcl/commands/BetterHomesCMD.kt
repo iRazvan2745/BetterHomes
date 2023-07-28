@@ -33,7 +33,7 @@ class BetterHomesCMD(private val plugin: BetterHomes) {
                 }
             }
         } else {
-            commandSender.sendMessage(plugin.locale.getLocale(NOT_A_PLAYER).toComponent())
+            commandSender.sendMessage(plugin.locale.getLocale(NON_PLAYER_MESSAGE).toComponent())
         }
     }
 
@@ -54,7 +54,7 @@ class BetterHomesCMD(private val plugin: BetterHomes) {
                 }
             }
         } else {
-            commandSender.sendMessage(plugin.locale.getLocale(NOT_A_PLAYER).toComponent())
+            commandSender.sendMessage(plugin.locale.getLocale(NON_PLAYER_MESSAGE).toComponent())
         }
     }
 
@@ -69,7 +69,7 @@ class BetterHomesCMD(private val plugin: BetterHomes) {
             val onlineSender = plugin.huskHomesAPI.adaptUser(commandSender)
             changeMaterial(commandSender, onlineSender, homeName, materialID)
         } else {
-            commandSender.sendMessage(plugin.locale.getLocale(NOT_A_PLAYER).toComponent())
+            commandSender.sendMessage(plugin.locale.getLocale(NON_PLAYER_MESSAGE).toComponent())
         }
     }
 
@@ -84,7 +84,7 @@ class BetterHomesCMD(private val plugin: BetterHomes) {
             val onlineSender = plugin.huskHomesAPI.adaptUser(commandSender)
             changeSuffix(commandSender, onlineSender, homeName, suffix)
         } else {
-            commandSender.sendMessage(plugin.locale.getLocale(NOT_A_PLAYER).toComponent())
+            commandSender.sendMessage(plugin.locale.getLocale(NON_PLAYER_MESSAGE).toComponent())
         }
     }
 
@@ -116,6 +116,6 @@ class BetterHomesCMD(private val plugin: BetterHomes) {
     }
 
     companion object {
-        private const val NOT_A_PLAYER = "messages.plugin.not_player"
+        private const val NON_PLAYER_MESSAGE = "messages.plugin.not_player"
     }
 }
