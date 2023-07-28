@@ -73,6 +73,7 @@ class ListMenu<T : Home>(
 
     //TODO: IMPLEMENT
     private fun reload(player: Player) {
+        // needs lot's of changes
     }
 
     override fun buildMenu(): Consumer<InventoryGui> {
@@ -82,8 +83,8 @@ class ListMenu<T : Home>(
             menu.setFiller(ItemStack(settings.getMaterial(settings.menuFillerItem)))
 
             // Add pagination handling
-            menu.addElement(getGroup(ButtonType.HOME))
-            menu.addElement(getGroup(ButtonType.CONTROL))
+            menu.addElement(createElementGroup(ButtonType.HOME))
+            menu.addElement(createElementGroup(ButtonType.CONTROL))
             if (settings.pagesEnabled && maxPages > 1) {
                 plugin.logger.fine("Loaded Pagination")
                 menu.addElement(createPageElement(PageButton.FIRST))
@@ -110,88 +111,59 @@ class ListMenu<T : Home>(
         )
     }
 
-    private fun getGroup(buttonType: ButtonType): GuiElementGroup {
+    private fun createElementGroup(buttonType: ButtonType): GuiElementGroup {
         val group = GuiElementGroup(buttonType.slotChar)
 
         val startIndex = (pageNumber - 1) * itemsPerPage + 1
         val endIndex = startIndex + itemsPerPage
         for (index in startIndex until endIndex) {
             val position = positionMap[index]
-            // Null positions are handled later
-            if (buttonType == ButtonType.HOME) {
-                group.addElement(createHomeButton(position, index, getPosType(position)))
-            } else {
-                group.addElement(createControlButton(position, index, getPosType(position)))
-            }
+            group.addElement(createElement(position, index, buttonType))
         }
         return group
     }
 
-    private fun createHomeButton(position: Home?, posIndex: Int, posType: PosType): StaticGuiElement {
-        val icon = getPosMaterial(position)?.let {
-            ItemStack(it)
-        }  ?: settings.getHomeIcon(posType)
-
-        return getButton(position, icon, ButtonType.HOME.slotChar, "home", posType.name, posIndex) { click ->
-            if (click.whoClicked is Player) {
-                val player = click.whoClicked as Player
-                when (click.type) {
-                    ClickType.LEFT, ClickType.RIGHT, ClickType.DROP -> {
-                        handleMainForHome(player, position, posType)
-                    }
-                    ClickType.SHIFT_LEFT -> {
-                        handleAltForHome(player, position, posType)
-                    }
-                    else -> {
-                        // Ignore any other click types (No handling required)
-                    }
-                }
-            }
-            return@getButton true
+    private fun createElement(position: Home?, posIndex: Int, buttonType: ButtonType): StaticGuiElement {
+        val posType = position?.let { PosType.CLAIMED } ?: if (positions.size >= maxHomes) PosType.LOCKED else PosType.UNSET
+        val icon = if (buttonType == ButtonType.HOME) {
+            getPosMaterial(position)?.let { ItemStack(it) } ?: settings.getHomeIcon(posType)
+        } else {
+            settings.getControlIcon(posType)
         }
-    }
-
-    private fun createControlButton(position: Home?, posIndex: Int, posType: PosType): StaticGuiElement {
-        val icon = settings.getControlIcon(posType)
-        return getButton(position, icon, ButtonType.CONTROL.slotChar, "control", posType.name, posIndex) { click ->
-            if (click.whoClicked is Player) {
-                val player = click.whoClicked as Player
-                when (click.type) {
-                    ClickType.LEFT, ClickType.RIGHT, ClickType.DROP -> {
+        return StaticGuiElement(buttonType.slotChar, icon, { click ->
+            if (click.whoClicked !is Player) return@StaticGuiElement true
+            val player = click.whoClicked as Player
+            when (click.type) {
+                ClickType.LEFT, ClickType.RIGHT, ClickType.DROP -> {
+                    if (buttonType == ButtonType.HOME) {
+                        handleMainForHome(player, position, posType)
+                    } else {
                         handleMainForControl(player, position, posIndex, posType)
                     }
-                    else -> {
-                        // Ignore any other click types (No handling required)
+                }
+                ClickType.SHIFT_LEFT -> {
+                    if (buttonType == ButtonType.HOME) {
+                        handleAltForHome(player, position, posType)
                     }
                 }
+                else -> {
+                    // Ignore any other click types (No handling required)
+                }
             }
-            return@getButton true
-        }
+            return@StaticGuiElement true
+        },
+            getButtonText(position, "${buttonType.name.lowercase()}.${posType.name.lowercase()}", posIndex)
+        )
     }
 
-    private fun getButton(
-        position: Home?,
-        icon: ItemStack,
-        slotChar: Char,
-        buttonType: String,
-        posType: String,
-        posIndex: Int,
-        clickHandler: (GuiElement.Click) -> Boolean,
-    ): StaticGuiElement {
-        val buttonText = listOf(
-            plugin.locale.getLocale(
-                "menu.${buttonType.lowercase()}.${posType.lowercase()}.name", mapOf(
-                    "suffix" to getPosSuffix(position),
-                    "number" to posIndex.toString()
-                )
-            ).toLegacy(),
-            plugin.locale.getLocale("menu.${buttonType.lowercase()}.${posType.lowercase()}.details").toLegacy(),
+    private fun getButtonText(position: Home?, id: String, posIndex: Int): String {
+        return listOf(
+            plugin.locale.getLocale("menu.$id.name", mapOf(
+                "suffix" to getPosSuffix(position),
+                "number" to posIndex.toString()
+            )).toLegacy(),
+            plugin.locale.getLocale("menu.$id.details").toLegacy(),
         ).joinToString("\n")
-        return StaticGuiElement(slotChar,
-            icon,
-            clickHandler,
-            buttonText
-        )
     }
 
     private fun handleMainForHome(player: Player, position: Home?, posType: PosType) {
@@ -226,7 +198,7 @@ class ListMenu<T : Home>(
                         "owner" to owner.username,
                         "name" to position.name)
                 ).toComponent())
-                recreate(player)
+                reload(player)
             } catch (e: TeleportationException) {
                 plugin.logger.fine("Error while teleporting ${player.name} to home ${position.name} \n  ${e.message}")
                 player.sendMessage(plugin.locale.getExpanded(
