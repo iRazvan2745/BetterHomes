@@ -17,7 +17,6 @@ class BetterHomesCMD(private val plugin: BetterHomes) {
         plugin.reloadConfigYAML()
         plugin.reloadLocaleYML()
         commandSender.sendMessage(plugin.locale.getLocale("messages.plugin.config_reload").toComponent())
-        plugin.logger.info("Config.yml was reloaded [!]")
     }
 
     @CommandMethod("betterhomes|bhgui open")

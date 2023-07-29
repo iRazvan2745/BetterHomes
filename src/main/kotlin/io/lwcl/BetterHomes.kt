@@ -13,7 +13,6 @@ import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.util.concurrent.Future
-import java.util.logging.Level
 
 
 class BetterHomes : JavaPlugin() {
@@ -104,12 +103,6 @@ class BetterHomes : JavaPlugin() {
         val prevVersion = settings.version
         configYML = manager.loadSettings()
         settings = configYML.get()
-        try {
-            logger.level = Level.parse(settings.logLevel)
-            logger.info("Logging level was set to: ${settings.logLevel}")
-        } catch (ignored: IllegalAccessException) {
-            logger.warning("Invalid log level: ${settings.logLevel}")
-        }
         if (settings.version == prevVersion) {
             logger.info("Configuration config.yml is the latest [!]")
         } else {

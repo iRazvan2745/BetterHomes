@@ -74,7 +74,7 @@ class PromptMenu<T : Home>(
     private fun recreateParent(player: Player) {
         val user = plugin.huskHomesAPI.adaptUser(player)
         this.close(user)
-        plugin.huskHomesAPI.getUserHomes(owner).thenApply {
+        plugin.huskHomesAPI.getUserHomes(owner).thenAccept {
             plugin.syncMethod {
                 val newParent = ListMenu.homes(plugin, it, owner)
                 newParent.show(user)

@@ -24,11 +24,6 @@ class Settings {
     var prefix: String = "<dark_gray>[<aqua>BetterHomes</aqua>]</dark_gray>"
     @YamlKey("plugin.language")
     var language: String = "en_us"
-    @YamlComment(
-        "Values: SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST, ALL."
-    )
-    @YamlKey("plugin.log-level")
-    var logLevel: String = "INFO"
     @YamlKey("plugin.pages")
     var pagesEnabled: Boolean = true
 
@@ -66,24 +61,12 @@ class Settings {
     @YamlKey("version")
     var version: String = "1.0.0"
 
-    fun getHomeIcon(posType: PosType): ItemStack {
-        return when (posType) {
+    fun getPosIcon(posType: PosType, isHome: Boolean): ItemStack {
+        return if (isHome) when (posType) {
             PosType.CLAIMED -> ItemStack(getMaterial(claimedHomeItem))
             PosType.LOCKED -> ItemStack(getMaterial(lockedHomeItem))
             PosType.UNSET -> ItemStack(getMaterial(unsetHomeItem))
-        }
-    }
-
-    fun getControlIcon(posType: PosType): ItemStack {
-        return when (posType) {
-            PosType.CLAIMED -> ItemStack(getMaterial(claimedControlItem))
-            PosType.LOCKED -> ItemStack(getMaterial(lockedControlItem))
-            PosType.UNSET -> ItemStack(getMaterial(unsetControlItem))
-        }
-    }
-
-    fun getPosIcon(posType: PosType): ItemStack {
-        return when (posType) {
+        } else when (posType) {
             PosType.CLAIMED -> ItemStack(getMaterial(claimedControlItem))
             PosType.LOCKED -> ItemStack(getMaterial(lockedControlItem))
             PosType.UNSET -> ItemStack(getMaterial(unsetControlItem))
