@@ -7,7 +7,7 @@ plugins {
 }
 
 
-group = "io.lwcl"
+group = "io.lwcl.betterhomes"
 version = providers.gradleProperty("plugin_version").get()
 description = providers.gradleProperty("plugin_description").get()
 
@@ -88,7 +88,7 @@ tasks {
     shadowJar {
         minimize {
             relocate("cloud.commandframework", "io.lwcl.cloud")
-            relocate("org.bstats", "io.lwcl.api.bstats")
+            relocate("org.bstats", "io.lwcl.bstats")
         }
     }
 }

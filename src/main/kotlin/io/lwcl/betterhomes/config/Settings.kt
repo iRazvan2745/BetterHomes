@@ -1,8 +1,8 @@
-package io.lwcl.config
+package io.lwcl.betterhomes.config
 
-import io.lwcl.api.enums.ButtonType
-import io.lwcl.api.enums.PageButton
-import io.lwcl.api.enums.PosType
+import io.lwcl.betterhomes.api.enums.ButtonType
+import io.lwcl.betterhomes.api.enums.PageButton
+import io.lwcl.betterhomes.api.enums.PosType
 import net.william278.annotaml.YamlComment
 import net.william278.annotaml.YamlFile
 import net.william278.annotaml.YamlKey

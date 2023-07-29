@@ -1,10 +1,10 @@
-package io.lwcl
+package io.lwcl.betterhomes
 
-import io.lwcl.api.HookManager
-import io.lwcl.commands.BetterHomesCMD
-import io.lwcl.config.Locales
-import io.lwcl.config.Settings
-import io.lwcl.listeners.ViewListener
+import io.lwcl.betterhomes.api.HookManager
+import io.lwcl.betterhomes.commands.BetterHomesCMD
+import io.lwcl.betterhomes.config.Locales
+import io.lwcl.betterhomes.config.Settings
+import io.lwcl.betterhomes.listeners.ViewListener
 import net.william278.annotaml.Annotaml
 import net.william278.huskhomes.BukkitHuskHomes
 import net.william278.huskhomes.api.HuskHomesAPI

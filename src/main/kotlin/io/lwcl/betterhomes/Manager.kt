@@ -1,4 +1,4 @@
-package io.lwcl
+package io.lwcl.betterhomes
 
 import cloud.commandframework.annotations.AnnotationParser
 import cloud.commandframework.arguments.parser.ParserParameters
@@ -7,7 +7,7 @@ import cloud.commandframework.bukkit.CloudBukkitCapabilities
 import cloud.commandframework.execution.AsynchronousCommandExecutionCoordinator
 import cloud.commandframework.meta.CommandMeta
 import cloud.commandframework.paper.PaperCommandManager
-import io.lwcl.config.Settings
+import io.lwcl.betterhomes.config.Settings
 import net.william278.annotaml.Annotaml
 import org.bukkit.Bukkit
 import org.bukkit.Material

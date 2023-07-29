@@ -1,7 +1,7 @@
-package io.lwcl.menu
+package io.lwcl.betterhomes.menu
 
 import de.themoep.inventorygui.InventoryGui
-import io.lwcl.BetterHomes
+import io.lwcl.betterhomes.BetterHomes
 import net.william278.huskhomes.position.Home
 import net.william278.huskhomes.user.OnlineUser
 import org.bukkit.Material

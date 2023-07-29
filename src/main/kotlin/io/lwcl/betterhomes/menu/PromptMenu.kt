@@ -1,9 +1,9 @@
-package io.lwcl.menu
+package io.lwcl.betterhomes.menu
 
 import de.themoep.inventorygui.InventoryGui
 import de.themoep.inventorygui.StaticGuiElement
-import io.lwcl.BetterHomes
-import io.lwcl.api.enums.ButtonType
+import io.lwcl.betterhomes.BetterHomes
+import io.lwcl.betterhomes.api.enums.ButtonType
 import net.william278.huskhomes.position.Home
 import net.william278.huskhomes.user.OnlineUser
 import org.bukkit.entity.Player

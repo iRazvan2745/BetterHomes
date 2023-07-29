@@ -1,4 +1,4 @@
-package io.lwcl.api.objects
+package io.lwcl.betterhomes.api.objects
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage

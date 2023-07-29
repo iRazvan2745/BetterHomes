@@ -1,8 +1,8 @@
-package io.lwcl.config
+package io.lwcl.betterhomes.config
 
-import io.lwcl.BetterHomes
-import io.lwcl.api.objects.ModernComponent
-import io.lwcl.api.objects.ModernText
+import io.lwcl.betterhomes.BetterHomes
+import io.lwcl.betterhomes.api.objects.ModernComponent
+import io.lwcl.betterhomes.api.objects.ModernText
 import net.william278.huskhomes.libraries.boostedyaml.YamlDocument
 import java.io.File
 import java.io.IOException

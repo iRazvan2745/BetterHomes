@@ -1,7 +1,7 @@
-package io.lwcl.listeners
+package io.lwcl.betterhomes.listeners
 
-import io.lwcl.BetterHomes
-import io.lwcl.menu.ListMenu
+import io.lwcl.betterhomes.BetterHomes
+import io.lwcl.betterhomes.menu.ListMenu
 import net.william278.huskhomes.event.HomeListEvent
 import net.william278.huskhomes.user.OnlineUser
 import org.bukkit.event.EventHandler

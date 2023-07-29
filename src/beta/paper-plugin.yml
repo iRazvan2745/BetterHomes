@@ -1,5 +1,5 @@
 name: ${plugin_name}
-main: io.lwcl.BetterHomes
+main: io.lwcl.betterhomes.BetterHomes
 version: '${version}'
 api-version: '1.19'
 

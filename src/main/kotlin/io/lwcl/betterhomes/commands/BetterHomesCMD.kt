@@ -1,8 +1,8 @@
-package io.lwcl.commands
+package io.lwcl.betterhomes.commands
 
 import cloud.commandframework.annotations.*
-import io.lwcl.BetterHomes
-import io.lwcl.menu.ListMenu
+import io.lwcl.betterhomes.BetterHomes
+import io.lwcl.betterhomes.menu.ListMenu
 import net.william278.huskhomes.user.OnlineUser
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player

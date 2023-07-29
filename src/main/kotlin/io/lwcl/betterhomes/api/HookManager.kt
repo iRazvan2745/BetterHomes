@@ -1,6 +1,6 @@
-package io.lwcl.api
+package io.lwcl.betterhomes.api
 
-import io.lwcl.BetterHomes
+import io.lwcl.betterhomes.BetterHomes
 import net.william278.huskhomes.BukkitHuskHomes
 import net.william278.huskhomes.api.HuskHomesAPI
 import org.bukkit.plugin.ServicePriority
