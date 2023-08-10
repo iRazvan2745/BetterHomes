@@ -49,7 +49,7 @@ dependencies {
     compileOnly("dev.dejvokep:boosted-yaml:1.3.1")
     compileOnly("net.william278:huskhomes:4.4.5")
 
-    implementation("net.william278:annotaml:2.0.5")
+    implementation("net.william278:annotaml:2.0.7")
     implementation("de.themoep:inventorygui:1.6.1-SNAPSHOT")
     implementation("org.bstats:bstats-bukkit:3.0.2")
     implementation("cloud.commandframework:cloud-paper:1.8.3")
