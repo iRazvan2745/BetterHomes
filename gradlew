@@ -83,7 +83,8 @@ done
 # This is normally unused
 # shellcheck disable=SC2034
 APP_BASE_NAME=${0##*/}
-APP_HOME=$( cd "${APP_HOME:-./}" && pwd -P ) || exit
+# Discard cd standard output in case $CDPATH is set (https://github.com/gradle/gradle/issues/25036)
+APP_HOME=$( cd "${APP_HOME:-./}" > /dev/null && pwd -P ) || exit
 
 # Use the maximum available, or set MAX_FD != -1 to use that value.
 MAX_FD=maximum
@@ -145,7 +146,6 @@ if ! "$cygwin" && ! "$darwin" && ! "$nonstop" ; then
       max*)
         # In POSIX sh, ulimit -H is undefined. That's why the result is checked to see if it worked.
         # shellcheck disable=SC3045
-        # shellcheck disable=SC2039
         MAX_FD=$( ulimit -H -n ) ||
             warn "Could not query maximum file descriptor limit"
     esac
@@ -154,7 +154,6 @@ if ! "$cygwin" && ! "$darwin" && ! "$nonstop" ; then
       *)
         # In POSIX sh, ulimit -n is undefined. That's why the result is checked to see if it worked.
         # shellcheck disable=SC3045
-        # shellcheck disable=SC2039
         ulimit -n "$MAX_FD" ||
             warn "Could not set maximum file descriptor limit to $MAX_FD"
     esac
